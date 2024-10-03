@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Overview() {
   const [data, setData] = useState(null);
@@ -8,37 +8,33 @@ function Overview() {
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
     if (!token) {
-      navigate('/login');
+      navigate('/login');  // If no token, redirect to login
     }
 
+    // Fetch protected data with JWT token
     fetch('http://127.0.0.1:5000/api/protected', {
       method: 'GET',
-      headers: { 'Authorization': `Bearer ${token}` },
+      headers: {
+        'Authorization': `Bearer ${token}`,  // Include the JWT token
+        'Content-Type': 'application/json'
+      },
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Unauthorized');
+      }
+      return response.json();
+    })
     .then(data => setData(data))
     .catch(error => {
       console.error('Error fetching data:', error);
-      alert('You are not authorized, please login.');
+      console.log('You are not authorized, please login.')
       navigate('/login');
     });
   }, [navigate]);
 
-  const handleLogout = async () => {
-    const token = localStorage.getItem('jwtToken');
-    if (token) {
-      try {
-        await fetch('http://127.0.0.1:5000/api/logout', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-      } catch (error) {
-        console.error('Error logging out:', error);
-      }
-    }
-    // Remove JWT token from localStorage
+  const handleLogout = () => {
     localStorage.removeItem('jwtToken');
-    // Redirect to login page
     navigate('/login');
   };
 
@@ -47,6 +43,7 @@ function Overview() {
       <h2>Overview Page</h2>
       <p>{data ? `Logged in as: ${data.logged_in_as.email}` : "Loading..."}</p>
       <button onClick={handleLogout}>Logout</button>
+      <Link to="/profile">Go to Profile</Link>  {/* Link to Profile */}
     </div>
   );
 }

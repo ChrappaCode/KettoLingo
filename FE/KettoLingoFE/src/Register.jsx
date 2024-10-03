@@ -20,10 +20,10 @@ function Register() {
 
       const data = await response.json();
       if (response.ok) {
-        alert('User registered successfully!');
+        console.log('User registered successfully:', data);
         navigate('/login');
       } else {
-        alert(data.error || 'Registration failed.');
+        console.log('Registration failed:', data);
       }
     } catch (error) {
       console.error('Error registering user:', error);
