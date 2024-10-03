@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt
 from flask_cors import CORS
 from flask_migrate import Migrate
-from models import db, User, TokenBlocklist
+from models import db, User, TokenBlocklist, Language, Category, Word, UserProgress, QuizResult
 from services import AuthService, ProfileService
 from repositories import UserRepository, TokenBlocklistRepository
 
