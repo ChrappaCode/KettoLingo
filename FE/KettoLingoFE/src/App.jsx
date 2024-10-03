@@ -3,6 +3,7 @@ import Register from './Register';
 import Login from './Login';
 import Overview from './Overview';
 import Profile from "./Profile.jsx";
+import LearningPage from "./LearningPage.jsx";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/overview" element={<Overview />} />
-            <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/learn/:nativeLanguageId/:foreignLanguageId/:categoryId" element={<LearningPage />} />
           <Route path="/" element={<Login />} />
         </Routes>
       </div>

@@ -1,6 +1,8 @@
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
-from repositories import UserRepository, TokenBlocklistRepository, LanguagesRepository
+from repositories import UserRepository, TokenBlocklistRepository, LanguagesRepository, WordsRepository, \
+    CategoriesRepository
+import logging
 
 bcrypt = Bcrypt()
 
@@ -59,3 +61,67 @@ class LanguagesService:
     def get_all_languages():
         languages = LanguagesRepository.get_all_languages()
         return [{'id': lang.id, 'name': lang.name} for lang in languages]
+
+
+class WordsService:
+    @staticmethod
+    def get_words_for_learning(native_language_id, foreign_language_id, category_id):
+        logging.debug(
+            f"Native Language ID: {native_language_id}, Foreign Language ID: {foreign_language_id}, Category ID: {category_id}")
+
+        # Fetch words based on category
+        words = WordsRepository.get_words_by_category(category_id)
+
+        if not words:
+            return []
+
+        # Dynamically map the native and foreign language fields
+        native_column = WordsService.get_language_column_name(native_language_id)
+        foreign_column = WordsService.get_language_column_name(foreign_language_id)
+
+        logging.debug(f"Mapped Native Column: {native_column}, Mapped Foreign Column: {foreign_column}")
+
+        if not native_column or not foreign_column:
+            return [{'native_word': '[Invalid Language]', 'foreign_word': '[Invalid Language]'}]  # Error case
+
+        # Map the correct words
+        return [
+            {
+                'native_word': getattr(word, native_column),
+                'foreign_word': getattr(word, foreign_column)
+            }
+            for word in words
+        ]
+
+    @staticmethod
+    def get_language_column_name(language_id):
+        # Ensure the language_id is an integer to avoid data type mismatch
+        try:
+            language_id = int(language_id)
+        except ValueError:
+            logging.error(f"Invalid language ID (could not convert to int): {language_id}")
+            return None
+
+        # Map language IDs to the correct column names in the database
+        language_map = {
+            1: 'english',
+            2: 'hungarian',
+            3: 'german',
+            4: 'slovak',
+            5: 'czech',
+            6: 'italian'
+        }
+
+        column_name = language_map.get(language_id)
+        if not column_name:
+            logging.error(f"Invalid language ID: {language_id}")
+        else:
+            logging.debug(f"Language ID {language_id} mapped to column '{column_name}'")
+        return column_name
+
+
+class CategoriesService:
+    @staticmethod
+    def get_all_categories():
+        categories = CategoriesRepository.get_all_categories()
+        return [{'id': cat.id, 'name': cat.name} for cat in categories]

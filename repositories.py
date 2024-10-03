@@ -1,4 +1,4 @@
-from models import User, TokenBlocklist, db, Language
+from models import User, TokenBlocklist, db, Language, Word, Category
 from datetime import datetime
 
 
@@ -45,3 +45,18 @@ class LanguagesRepository:
     @staticmethod
     def get_all_languages():
         return Language.query.all()
+
+
+class WordsRepository:
+    @staticmethod
+    def get_words_by_category(category_id):
+        return Word.query.filter_by(category_id=category_id).all()  # Fetch words by category only
+
+
+
+
+
+class CategoriesRepository:
+    @staticmethod
+    def get_all_categories():
+        return Category.query.all()
