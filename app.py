@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_cors import CORS
 from flask_migrate import Migrate
 from models import db, User, TokenBlocklist, Language, Category, Word, UserProgress, QuizResult
-from services import AuthService, ProfileService
+from services import AuthService, ProfileService, LanguagesService
 from repositories import UserRepository, TokenBlocklistRepository
 
 app = Flask(__name__)
@@ -74,6 +74,20 @@ def update_profile():
     data = request.get_json()
     user = UserRepository.get_user_by_email(current_user['email'])
     return jsonify(*ProfileService.update_profile(user.id, data))
+
+
+@app.route('/api/languages', methods=['GET'])
+@jwt_required()
+def get_languages():
+    languages_data = LanguagesService.get_all_languages()
+
+    if not languages_data:
+        return jsonify({"error": "No languages found"}), 404
+
+    return jsonify(languages_data), 200
+
+
+
 
 @app.route('/api/protected', methods=['GET', 'OPTIONS'])
 @jwt_required()

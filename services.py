@@ -1,6 +1,6 @@
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
-from repositories import UserRepository, TokenBlocklistRepository
+from repositories import UserRepository, TokenBlocklistRepository, LanguagesRepository
 
 bcrypt = Bcrypt()
 
@@ -52,3 +52,10 @@ class ProfileService:
     def update_profile(user_id, data):
         user = UserRepository.update_user(user_id, data)
         return {"message": "Profile updated successfully", "username": user.username, "email": user.email}, 200
+
+
+class LanguagesService:
+    @staticmethod
+    def get_all_languages():
+        languages = LanguagesRepository.get_all_languages()
+        return [{'id': lang.id, 'name': lang.name} for lang in languages]

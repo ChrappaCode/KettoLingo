@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 function Profile() {
   const [formData, setFormData] = useState({ username: '', email: '' });
@@ -88,6 +88,7 @@ function Profile() {
         />
         <button type="submit">Update Profile</button>
       </form>
+        <p><Link to="/overview">Go to Overview</Link></p>
     </div>
   );
 }

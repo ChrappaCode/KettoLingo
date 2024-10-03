@@ -1,4 +1,4 @@
-from models import User, TokenBlocklist, db
+from models import User, TokenBlocklist, db, Language
 from datetime import datetime
 
 
@@ -39,3 +39,9 @@ class TokenBlocklistRepository:
     @staticmethod
     def is_token_blacklisted(jti):
         return TokenBlocklist.query.filter_by(jti=jti).first() is not None
+
+
+class LanguagesRepository:
+    @staticmethod
+    def get_all_languages():
+        return Language.query.all()
