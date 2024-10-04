@@ -4,7 +4,7 @@ import Login from './components/Login.jsx';
 import Overview from './components/Overview.jsx';
 import Profile from "./components/Profile.jsx";
 
-function App() {
+function App() { 
   return (
     <Router>
       <div>
