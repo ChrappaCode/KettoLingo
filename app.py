@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_cors import CORS
 from flask_migrate import Migrate
 from models import db, User, TokenBlocklist, Language, Category, Word, UserProgress, QuizResult
-from services import AuthService, ProfileService, LanguagesService
+from services import AuthService, ProfileService, LanguagesService, WordsService, CategoriesService
 from repositories import UserRepository, TokenBlocklistRepository
 
 app = Flask(__name__)
@@ -85,6 +85,26 @@ def get_languages():
         return jsonify({"error": "No languages found"}), 404
 
     return jsonify(languages_data), 200
+
+
+@app.route('/api/learn/<native_language_id>/<foreign_language_id>/<category_id>', methods=['GET'])
+@jwt_required()
+def get_words_for_learning(native_language_id, foreign_language_id, category_id):
+    words = WordsService.get_words_for_learning(native_language_id, foreign_language_id, category_id)
+
+    if not words:
+        return jsonify({"error": "No words found for the selected languages and category"}), 404
+
+    return jsonify(words), 200
+
+@app.route('/api/categories', methods=['GET'])
+@jwt_required()
+def get_categories():
+    categories = CategoriesService.get_all_categories()
+    if not categories:
+        return jsonify({"error": "No categories found"}), 404
+
+    return jsonify(categories), 200
 
 
 
