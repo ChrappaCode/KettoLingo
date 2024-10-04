@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import styles from "./register.module.css";
 
 function Register() {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
@@ -31,15 +32,17 @@ function Register() {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder="Username" onChange={handleChange} />
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} />
-        <button type="submit">Register</button>
-      </form>
-      <p>Already have an account? <Link to="/login">Login here</Link></p> {/* Add link to switch to Login page */}
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h2 className={styles.title}>Register</h2>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <input className={styles.input} type="text" name="username" placeholder="Username" onChange={handleChange} />
+          <input className={styles.input} type="email" name="email" placeholder="Email" onChange={handleChange} />
+          <input className={styles.input} type="password" name="password" placeholder="Password" onChange={handleChange} />
+          <button className={styles.button} type="submit">Register</button>
+        </form>
+        <p className={styles.link}>Already have an account? <Link to="/login">Login here</Link></p>
+      </div>
     </div>
   );
 }

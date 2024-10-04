@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
+import styles from "./overview.module.css";
 function Overview() {
   const [data, setData] = useState(null);
   const [languages, setLanguages] = useState([]);  // Initialize as an empty array
