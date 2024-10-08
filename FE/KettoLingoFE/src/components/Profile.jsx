@@ -13,7 +13,7 @@ function Profile() {
     }
 
     // Fetch user profile data from the backend
-    fetch('http://127.0.0.1:5000/api/profile', {
+    fetch('http://localhost:5000/api/profile', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,  // Include the JWT token
@@ -43,7 +43,7 @@ function Profile() {
     const token = localStorage.getItem('jwtToken');
     if (token) {
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/profile', {
+        const response = await fetch('http://localhost:5000/api/profile', {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${token}`,
