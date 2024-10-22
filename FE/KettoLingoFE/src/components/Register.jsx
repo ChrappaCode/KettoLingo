@@ -33,13 +33,56 @@ function Register() {
 
   return (
     <div className={styles.container}>
-      <h1>KettőLingo</h1>
+      <div className={styles.leftSection}>
+        <h1>KettőLingo</h1>
+        <p>Join KettőLingo today and embark on your language learning journey! Create an account and connect with fellow learners.</p>
+
+        {/* Particles */}
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+      </div>
+
       <div className={styles.card}>
         <h2 className={styles.title}>Register</h2>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <input className={styles.input} type="text" name="username" placeholder="Username" onChange={handleChange} />
-          <input className={styles.input} type="email" name="email" placeholder="Email" onChange={handleChange} />
-          <input className={styles.input} type="password" name="password" placeholder="Password" onChange={handleChange} />
+          <input
+            className={styles.input}
+            type="text"
+            name="username"
+            placeholder="Username"
+            onChange={handleChange}
+            required
+          />
+          <input
+            className={styles.input}
+            type="email"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            required
+          />
+          <input
+            className={styles.input}
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            required
+          />
           <button className={styles.button} type="submit">Register</button>
         </form>
         <p className={styles.link}>Already have an account? <Link to="/login">Login here</Link></p>
