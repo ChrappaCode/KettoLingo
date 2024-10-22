@@ -36,7 +36,31 @@ function Login() {
 
   return (
     <div className={styles.container}>
-      <h1>KettőLingo</h1>
+      <div className={styles.leftSection}>
+        <h1>KettőLingo</h1>
+        <p>Welcome to KettőLingo, where language learning becomes an adventure. Discover new ways to master languages and join a vibrant community of learners.</p>
+
+        {/* Több partikulum hozzáadása */}
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+                <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+                <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+        <div className={styles.particle}></div>
+      </div>
+
       <div className={styles.card}>
         <h2 className={styles.title}>Login</h2>
         <form className={styles.form} onSubmit={handleSubmit}>
