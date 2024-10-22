@@ -4,13 +4,13 @@ import Login from './components/Login.jsx';
 import Overview from './components/Overview.jsx';
 import Profile from "./components/Profile.jsx";
 import LearningPage from "./LearningPage.jsx";
+
 import './App.css';
 
 function App() {
   return (
     <Router>
       <div>
-        <h1>KettőLingo</h1>
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

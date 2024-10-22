@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from "./overview.module.css";
-
+import Header from './Header.jsx';
 function Overview() {
   const [data, setData] = useState(null);
   const [languages, setLanguages] = useState([]);
@@ -118,7 +118,10 @@ function Overview() {
   }
 
   return (
+      <div>
+        <Header />
     <div className={styles.container}>
+
       <div className={styles.card}>
         <h2 className={styles.title}>Overview Page</h2>
         <p className={styles.subtitle}>{data ? `Logged in as: ${data.logged_in_as.email}` : "Loading..."}</p>
@@ -185,6 +188,7 @@ function Overview() {
 
       </div>
     </div>
+        </div>
   );
 }
 

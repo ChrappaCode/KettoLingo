@@ -36,6 +36,7 @@ function Login() {
 
   return (
     <div className={styles.container}>
+      <h1>KettőLingo</h1>
       <div className={styles.card}>
         <h2 className={styles.title}>Login</h2>
         <form className={styles.form} onSubmit={handleSubmit}>

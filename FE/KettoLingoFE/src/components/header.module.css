@@ -1,0 +1,58 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(to right, #96c3f8, #17465e);
+}
+
+.logo {
+  text-align: center;
+  font-family: "Oi", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
+  background: linear-gradient(to bottom, #478ae5, #162f50);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.logo a {
+  text-decoration: none;
+  color: #96c3f8;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+}
+
+.navLink {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #96c3f8;
+  font-size: 18px;
+}
+
+.logoutButton {
+  margin-left: 20px;
+  padding: 5px 10px;
+  background-color: #96c3f8;
+  color: #17465e;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.logoutButton:hover {
+  background-color: #d0e4fa;
+    transform: translateY(-2px);
+}
+
+.navLink:hover {
+   text-shadow: 0 2px 5px rgb(255, 255, 255,0.4);
+}

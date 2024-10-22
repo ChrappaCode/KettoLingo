@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from "./profile.module.css";
+import Header from "./Header.jsx";
 
 function Profile() {
   const [formData, setFormData] = useState({ username: '', email: '' });
@@ -72,6 +73,8 @@ function Profile() {
   }
 
   return (
+      <div>
+        <Header/>
     <div className={styles["profile-container"]}>
       <div className={styles["profile-card"]}>
         <h2 className={styles["profile-heading"]}>Profile Page</h2>
@@ -106,6 +109,7 @@ function Profile() {
         <p className={styles["profile-link"]}><Link to="/overview">Go to Overview</Link></p>
       </div>
     </div>
+        </div>
   );
 }
 

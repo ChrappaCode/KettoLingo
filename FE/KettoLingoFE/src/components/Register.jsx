@@ -33,6 +33,7 @@ function Register() {
 
   return (
     <div className={styles.container}>
+      <h1>KettőLingo</h1>
       <div className={styles.card}>
         <h2 className={styles.title}>Register</h2>
         <form className={styles.form} onSubmit={handleSubmit}>
