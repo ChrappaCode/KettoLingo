@@ -1,0 +1,32 @@
+[project]
+name = "kettolingo"
+version = "0.1.0"
+description = "KettoLingo"
+authors = []
+dependencies = [
+    "flask>=3.0.3",
+    "flask-bcrypt>=1.0.1",
+    "flask-jwt-extended>=4.6.0",
+    "flask-cors>=5.0.0",
+    "flask-migrate>=4.0.7",
+    "psycopg2-binary>=2.9.9",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+virtual = true
+dev-dependencies = [
+    "basedpyright>=1.18.3",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]

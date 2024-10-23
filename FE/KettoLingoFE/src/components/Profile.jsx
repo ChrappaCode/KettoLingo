@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import styles from "./profile.module.css";
+import Header from "./Header.jsx";
 
 function Profile() {
   const [formData, setFormData] = useState({ username: '', email: '' });
-  const [loading, setLoading] = useState(true);  // Loading state
+  const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState({ message: '', type: '' }); // Értesítési állapot
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,37 +16,34 @@ function Profile() {
     }
 
     // Fetch user profile data from the backend
-    fetch('http://127.0.0.1:5000/api/profile', {
+    fetch('http://localhost:5000/api/profile', {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${token}`,  // Include the JWT token
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })
       .then(response => response.json())
       .then(data => {
         setFormData({ username: data.username, email: data.email });
-        setLoading(false);  // Set loading to false when data is fetched
+        setLoading(false);
       })
       .catch(error => {
         console.error('Error fetching profile data:', error);
-        console.log('You are not authorized, please login.');
         navigate('/login');
       });
   }, [navigate]);
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submit to update profile
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('jwtToken');
     if (token) {
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/profile', {
+        const response = await fetch('http://localhost:5000/api/profile', {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -53,43 +53,63 @@ function Profile() {
         });
 
         if (response.ok) {
-          console.log('Profile updated successfully!')
+          setNotification({ message: 'Profile updated successfully!', type: 'success' }); // Siker értesítés
         } else {
-          console.log('Failed to update profile.')
+          setNotification({ message: 'Failed to update profile.', type: 'error' }); // Hiba értesítés
         }
       } catch (error) {
         console.error('Error updating profile:', error);
+        setNotification({ message: 'An error occurred. Please try again.', type: 'error' });
       }
     }
   };
 
-  // Show a loading state until data is fetched
+  const closeNotification = () => {
+    setNotification({ message: '', type: '' });
+  };
+
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className={styles["profile-loading"]}>Loading...</p>;
   }
 
   return (
-    <div>
-      <h2>Profile Page</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}  // Pre-fill username
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}  // Pre-fill email
-          onChange={handleChange}
-        />
-        <button type="submit">Update Profile</button>
-      </form>
-        <p><Link to="/overview">Go to Overview</Link></p>
+      <div>
+        <Header/>
+    <div className={styles["profile-container"]}>
+      <div className={styles["profile-card"]}>
+        <h2 className={styles["profile-heading"]}>Profile Page</h2>
+
+        {notification.message && (
+          <div className={`${styles.notification} ${styles[notification.type]}`}>
+            <span>{notification.message}</span>
+            <button className={styles.closeBtn} onClick={closeNotification}>×</button>
+          </div>
+        )}
+
+        <form className={styles["profile-form"]} onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            className={styles["profile-input"]}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className={styles["profile-input"]}
+          />
+          <button type="submit" className={styles["profile-button"]}>Update Profile</button>
+        </form>
+
+        <p className={styles["profile-link"]}><Link to="/overview">Go to Overview</Link></p>
+      </div>
     </div>
+        </div>
   );
 }
 

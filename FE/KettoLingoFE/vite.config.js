@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:5000',  // Flask backend server
+        target: process.env.KETTO_BE || 'http://127.0.0.1:5000',  // Flask backend server
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),  // Optional rewrite rule

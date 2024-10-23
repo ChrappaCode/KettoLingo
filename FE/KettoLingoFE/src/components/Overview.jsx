@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from "./overview.module.css";
-
+import Header from './Header.jsx';
 function Overview() {
   const [data, setData] = useState(null);
   const [languages, setLanguages] = useState([]);
@@ -19,7 +19,7 @@ function Overview() {
       navigate('/login');  // Redirect to login if no token
     }
 
-    const fetchProtectedData = fetch('http://127.0.0.1:5000/api/protected', {
+    const fetchProtectedData = fetch('http://localhost:5000/api/protected', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,  // Include JWT token
@@ -39,7 +39,7 @@ function Overview() {
         navigate('/login');
       });
 
-    const fetchLanguages = fetch('http://127.0.0.1:5000/api/languages', {
+    const fetchLanguages = fetch('http://localhost:5000/api/languages', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -58,7 +58,7 @@ function Overview() {
         setError('Failed to load languages.');
       });
 
-    const fetchCategories = fetch('http://127.0.0.1:5000/api/categories', {
+    const fetchCategories = fetch('http://localhost:5000/api/categories', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -118,7 +118,10 @@ function Overview() {
   }
 
   return (
+      <div>
+        <Header />
     <div className={styles.container}>
+
       <div className={styles.card}>
         <h2 className={styles.title}>Overview Page</h2>
         <p className={styles.subtitle}>{data ? `Logged in as: ${data.logged_in_as.email}` : "Loading..."}</p>
@@ -185,6 +188,7 @@ function Overview() {
 
       </div>
     </div>
+        </div>
   );
 }
 

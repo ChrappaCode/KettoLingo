@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt
@@ -8,10 +9,10 @@ from services import AuthService, ProfileService, LanguagesService, WordsService
 from repositories import UserRepository, TokenBlocklistRepository
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True, expose_headers="Authorization")
+CORS(app, resources={r"/*": {"origins": f"http://{os.getenv('KETTO_FE', default='localhost')}:5173"}}, supports_credentials=True, expose_headers="Authorization")
 
 # Configure PostgreSQL database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/KettoLingo'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('KETTO_DB', default='postgresql://postgres:postgres@localhost/KettoLingo')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize extensions

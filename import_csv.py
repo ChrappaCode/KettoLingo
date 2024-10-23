@@ -4,7 +4,7 @@ from app import app  # Import the Flask app instance
 from models import db, Category, Word
 
 # Define the path to the folder containing your CSVs
-csv_folder = "VASA_CESTA_Z_Ccka\\words_csv"
+csv_folder = "./words_csv"
 
 # A mapping of category names to file names
 categories = {

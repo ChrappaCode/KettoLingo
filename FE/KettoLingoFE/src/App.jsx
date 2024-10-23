@@ -5,11 +5,12 @@ import Overview from './components/Overview.jsx';
 import Profile from "./components/Profile.jsx";
 import LearningPage from "./LearningPage.jsx";
 
+import './App.css';
+
 function App() {
   return (
     <Router>
       <div>
-        <h1>KettoLingo App</h1>
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
