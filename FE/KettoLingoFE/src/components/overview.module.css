@@ -5,12 +5,14 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 20px;
+  /*padding: 20px;*/
+    margin-top: 100px;
 }
 
 .card {
   background: white;
-  padding: 40px 30px;
+ /* padding: 40px 30px;*/
+  padding: 30px;
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   width: 100%;
@@ -19,9 +21,7 @@
   transition: transform 0.2s;
 }
 
-.card:hover {
-  transform: scale(1.02);
-}
+
 
 .title {
   background: linear-gradient(to bottom, #478ae5, #162f50);
@@ -32,6 +32,7 @@
   font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 20px;
+
 }
 
 .subtitle {
@@ -41,20 +42,42 @@
 }
 
 .select {
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  padding: 12px 20px;
+  border: 1px solid #d1d5db; /* Halványabb, modern szegélyszín */
+  border-radius: 12px; /* Nagyobb ív a lekerekítéshez */
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: #f9fafb; /* Világos háttérszín */
+  color: #374151; /* Sötétebb szövegszín */
+  max-width: 320px;
+  width: 100%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  appearance: none; /* Eltünteti az alapértelmezett nyilat */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath fill='%23627496' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.select:hover {
+  background-color: #eef2f7; /* Finom árnyékolás hover esetén */
+  border-color: #cbd5e1;
 }
 
 .select:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+  border-color: #60a5fa; /* Kiemelt szegély fókusz esetén */
+  box-shadow: 0 0 8px rgba(96, 165, 250, 0.3); /* Enyhébb fókusz árnyék */
 }
 
-.button {
+.select option {
+  font-weight: normal;
+  color: #111827;
+}
+
+/*.button {
   padding: 15px;
   background-color: #4a90e2;
   color: white;
@@ -70,6 +93,21 @@
   background-color: #357ab8;
   transform: translateY(-2px);
 }
+*/
+.button {
+  padding: 15px;
+  font-size: 1.1rem;
+  background: linear-gradient(to right, #96c3f8, #17465e);
+  color: #fff;
+  border: none;
+ border-radius: 20px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.button:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
 
 .link {
   margin-top: 20px;
@@ -81,4 +119,21 @@
 
 .link:hover {
   color: #357ab8;
+}
+.label_select{
+   background: linear-gradient(to bottom, #478ae5, #162f50);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
+
+}
+.email{
+  background: linear-gradient(to bottom, #478ae5, #162f50);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+
 }

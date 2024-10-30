@@ -3,7 +3,7 @@ import Register from './components/Register.jsx';
 import Login from './components/Login.jsx';
 import Overview from './components/Overview.jsx';
 import Profile from "./components/Profile.jsx";
-import LearningPage from "./LearningPage.jsx";
+import LearningPage from "./components/LearningPage.jsx";
 
 import './App.css';
 
