@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 function QuizPage() {
@@ -62,6 +62,20 @@ function QuizPage() {
     }
   };
 
+  // Memoize options for the current question to avoid recalculating on each render
+  const options = useMemo(() => {
+    if (!currentQuestion) return [];
+
+    const uniqueOptions = new Set([currentQuestion.correct_answer]);
+    while (uniqueOptions.size < 4) {
+      const randomIndex = Math.floor(Math.random() * questions.length);
+      const randomAnswer = questions[randomIndex].correct_answer;
+      uniqueOptions.add(randomAnswer);
+    }
+
+    return Array.from(uniqueOptions).sort(() => Math.random() - 0.5); // Shuffle options
+  }, [currentQuestion, questions]);
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -78,18 +92,6 @@ function QuizPage() {
       </div>
     );
   }
-
-  const generateOptions = () => {
-    const options = new Set([currentQuestion.correct_answer]);
-    while (options.size < 4) {
-      const randomIndex = Math.floor(Math.random() * questions.length);
-      const randomAnswer = questions[randomIndex].correct_answer;
-      options.add(randomAnswer);
-    }
-    return Array.from(options).sort(() => Math.random() - 0.5); // Shuffle options
-  };
-
-  const options = generateOptions();
 
   return (
     <div>
