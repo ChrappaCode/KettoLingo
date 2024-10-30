@@ -5,7 +5,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_cors import CORS
 from flask_migrate import Migrate
 from models import db, User, TokenBlocklist, Language, Category, Word, UserProgress, QuizResult
-from services import AuthService, ProfileService, LanguagesService, WordsService, CategoriesService
+from services import AuthService, ProfileService, LanguagesService, WordsService, CategoriesService, QuizService
 from repositories import UserRepository, TokenBlocklistRepository
 
 app = Flask(__name__)
@@ -106,6 +106,17 @@ def get_categories():
         return jsonify({"error": "No categories found"}), 404
 
     return jsonify(categories), 200
+
+
+@app.route('/api/quiz/<native_language_id>/<foreign_language_id>/<category_id>', methods=['GET'])
+@jwt_required()
+def get_quiz_questions(native_language_id, foreign_language_id, category_id):
+    questions = WordsService.get_quiz_questions(native_language_id, foreign_language_id, category_id)
+
+    if not questions:
+        return jsonify({"error": "No quiz questions found for the selected languages and category"}), 404
+
+    return jsonify(questions), 200
 
 
 

@@ -1,3 +1,5 @@
+from sqlalchemy import func
+
 from models import User, TokenBlocklist, db, Language, Word, Category
 from datetime import datetime
 
@@ -48,10 +50,34 @@ class LanguagesRepository:
 
 
 class WordsRepository:
+
     @staticmethod
     def get_words_by_category(category_id):
         return Word.query.filter_by(category_id=category_id).all()  # Fetch words by category only
 
+    @staticmethod
+    def get_random_words_for_options(category_id, language_column, exclude_word, limit=3):
+        # Fetch random words from the same category, excluding the correct answer
+        return [
+            getattr(word, language_column)
+            for word in
+            Word.query.filter(Word.category_id == category_id, getattr(Word, language_column) != exclude_word)
+            .order_by(func.random()).limit(limit).all()
+        ]
+
+    @staticmethod
+    def get_language_column_name(language_id):
+        # Map language IDs to the correct column names in the database
+        language_map = {
+            1: 'english',
+            2: 'hungarian',
+            3: 'german',
+            4: 'slovak',
+            5: 'czech',
+            6: 'italian'
+        }
+        column_name = language_map.get(language_id)
+        return column_name or "unknown_language"  # Default to "unknown_language" if no match is found
 
 
 

@@ -6,6 +6,7 @@ import Profile from "./components/Profile.jsx";
 import LearningPage from "./components/LearningPage.jsx";
 
 import './App.css';
+import QuizPage from "./components/QuizPage.jsx";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/learn/:nativeLanguageId/:foreignLanguageId/:categoryId" element={<LearningPage />} />
           <Route path="/" element={<Login />} />
+          <Route path="/quiz/:nativeLanguageId/:foreignLanguageId/:categoryId" element={<QuizPage />} />
         </Routes>
       </div>
     </Router>

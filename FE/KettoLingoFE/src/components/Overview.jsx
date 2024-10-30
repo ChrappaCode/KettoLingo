@@ -126,6 +126,16 @@ function Overview() {
     }
   };
 
+  const handleStartQuiz = () => {
+    console.log("Native Language ID: ", nativeLanguage);
+    console.log("Foreign Language ID: ", foreignLanguage);
+    console.log("Category ID: ", selectedCategory);
+
+    if (nativeLanguage && foreignLanguage && selectedCategory) {
+      navigate(`/quiz/${nativeLanguage}/${foreignLanguage}/${selectedCategory}`);
+    }
+  };
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -205,7 +215,7 @@ function Overview() {
               <button className={styles.button} onClick={handleStartLearning}>
                 Learn Words
               </button>
-              <button className={styles.button} onClick={() => navigate(`/quiz/${nativeLanguage}/${foreignLanguage}/${selectedCategory}`)}>
+              <button className={styles.button} onClick={handleStartQuiz}>
                 Take a Quiz
               </button>
             </div>
