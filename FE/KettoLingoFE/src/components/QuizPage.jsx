@@ -4,7 +4,12 @@ import { useParams } from 'react-router-dom';
 function QuizPage() {
   const { nativeLanguageId, foreignLanguageId, categoryId } = useParams();
   console.log("Params:", { nativeLanguageId, foreignLanguageId, categoryId });
-  const [questions, setQuestions] = useState([]); // Initialize as an empty array
+
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [score, setScore] = useState(0);
+  const [isQuizComplete, setIsQuizComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,9 +30,9 @@ function QuizPage() {
       })
       .then(data => {
         if (data.error) {
-          setError(data.error); // Handle error returned from backend
+          setError(data.error);
         } else {
-          setQuestions(data); // Assume data is the array of questions
+          setQuestions(data);
         }
         setIsLoading(false);
       })
@@ -38,6 +43,25 @@ function QuizPage() {
       });
   }, [nativeLanguageId, foreignLanguageId, categoryId]);
 
+  const currentQuestion = questions[currentQuestionIndex];
+
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+  };
+
+  const handleNextQuestion = () => {
+    if (selectedOption === currentQuestion.correct_answer) {
+      setScore(score + 1);
+    }
+    setSelectedOption(null);
+
+    if (currentQuestionIndex + 1 < questions.length) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      setIsQuizComplete(true);
+    }
+  };
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -46,20 +70,50 @@ function QuizPage() {
     return <p>{error}</p>;
   }
 
+  if (isQuizComplete) {
+    return (
+      <div>
+        <h2>Quiz Complete!</h2>
+        <p>Your Score: {score} / {questions.length}</p>
+      </div>
+    );
+  }
+
+  const generateOptions = () => {
+    const options = new Set([currentQuestion.correct_answer]);
+    while (options.size < 4) {
+      const randomIndex = Math.floor(Math.random() * questions.length);
+      const randomAnswer = questions[randomIndex].correct_answer;
+      options.add(randomAnswer);
+    }
+    return Array.from(options).sort(() => Math.random() - 0.5); // Shuffle options
+  };
+
+  const options = generateOptions();
+
   return (
     <div>
       <h2>Quiz Page</h2>
-      {questions.length > 0 ? (
-        questions.map((question, index) => (
+      <p>Question {currentQuestionIndex + 1} of {questions.length}</p>
+      <p><strong>{currentQuestion.question}</strong></p>
+      <div>
+        {options.map((option, index) => (
           <div key={index}>
-            <p>Question: {question.question}</p>
-            <p>Answer: {question.correct_answer}</p>
-            {/* Add quiz interaction elements here */}
+            <input
+              type="radio"
+              id={`option-${index}`}
+              name="option"
+              value={option}
+              checked={selectedOption === option}
+              onChange={() => handleOptionSelect(option)}
+            />
+            <label htmlFor={`option-${index}`}>{option}</label>
           </div>
-        ))
-      ) : (
-        <p>No questions available for this quiz.</p>
-      )}
+        ))}
+      </div>
+      <button onClick={handleNextQuestion} disabled={!selectedOption}>
+        {currentQuestionIndex + 1 < questions.length ? "Next Question" : "Finish Quiz"}
+      </button>
     </div>
   );
 }
