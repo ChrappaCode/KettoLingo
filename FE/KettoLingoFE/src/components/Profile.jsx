@@ -6,7 +6,7 @@ import Header from "./Header.jsx";
 function Profile() {
   const [formData, setFormData] = useState({ username: '', email: '' });
   const [loading, setLoading] = useState(true);
-  const [notification, setNotification] = useState({ message: '', type: '' }); // Értesítési állapot
+  const [notification, setNotification] = useState({ message: '', type: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,7 +15,6 @@ function Profile() {
       navigate('/login');
     }
 
-    // Fetch user profile data from the backend
     fetch('http://localhost:5000/api/profile', {
       method: 'GET',
       headers: {
@@ -35,7 +34,10 @@ function Profile() {
   }, [navigate]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name !== 'email') {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -49,13 +51,13 @@ function Profile() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({ username: formData.username }),
         });
 
         if (response.ok) {
-          setNotification({ message: 'Profile updated successfully!', type: 'success' }); // Siker értesítés
+          setNotification({ message: 'Profile updated successfully!', type: 'success' });
         } else {
-          setNotification({ message: 'Failed to update profile.', type: 'error' }); // Hiba értesítés
+          setNotification({ message: 'Failed to update profile.', type: 'error' });
         }
       } catch (error) {
         console.error('Error updating profile:', error);
@@ -73,43 +75,41 @@ function Profile() {
   }
 
   return (
-      <div>
-        <Header/>
-    <div className={styles["profile-container"]}>
-      <div className={styles["profile-card"]}>
-        <h2 className={styles["profile-heading"]}>Profile Page</h2>
+    <div>
+      <Header/>
+      <div className={styles["profile-container"]}>
+        <div className={styles["profile-card"]}>
+          <h2 className={styles["profile-heading"]}>Profile Page</h2>
 
-        {notification.message && (
-          <div className={`${styles.notification} ${styles[notification.type]}`}>
-            <span>{notification.message}</span>
-            <button className={styles.closeBtn} onClick={closeNotification}>×</button>
-          </div>
-        )}
+          {notification.message && (
+            <div className={`${styles.notification} ${styles[notification.type]}`}>
+              <span>{notification.message}</span>
+              <button className={styles.closeBtn} onClick={closeNotification}>×</button>
+            </div>
+          )}
 
-        <form className={styles["profile-form"]} onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
-            onChange={handleChange}
-            className={styles["profile-input"]}
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            className={styles["profile-input"]}
-          />
-          <button type="submit" className={styles["profile-button"]}>Update Profile</button>
-        </form>
-
-        <p className={styles["profile-link"]}><Link to="/overview">Go to Overview</Link></p>
+          <form className={styles["profile-form"]} onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              className={styles["profile-input"]}
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              readOnly
+              className={styles["profile-input"]}
+            />
+            <button type="submit" className={styles["profile-button"]}>Update Profile</button>
+          </form>
+        </div>
       </div>
     </div>
-        </div>
   );
 }
 
