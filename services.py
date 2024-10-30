@@ -1,3 +1,5 @@
+import random
+
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
 from repositories import UserRepository, TokenBlocklistRepository, LanguagesRepository, WordsRepository, \
@@ -94,6 +96,46 @@ class WordsService:
         ]
 
     @staticmethod
+    def get_quiz_questions(native_language_id, foreign_language_id, category_id):
+        logging.debug(
+            f"Native Language ID: {native_language_id}, Foreign Language ID: {foreign_language_id}, Category ID: {category_id}")
+
+        # Fetch words based on category
+        words = WordsRepository.get_words_by_category(category_id)
+
+        if not words:
+            return []
+
+        # Dynamically map the native and foreign language fields
+        native_column = WordsService.get_language_column_name(native_language_id)
+        foreign_column = WordsService.get_language_column_name(foreign_language_id)
+
+        logging.debug(f"Mapped Native Column: {native_column}, Mapped Foreign Column: {foreign_column}")
+
+        if not native_column or not foreign_column:
+            return [{'question': '[Invalid Language]', 'correct_answer': '[Invalid Language]', 'options': []}]
+
+        # Create quiz questions
+        questions = []
+        for word in words:
+            correct_answer = getattr(word, native_column)
+            question_text = getattr(word, foreign_column)
+
+            # Get a list of random words for incorrect options
+            options = WordsRepository.get_random_words_for_options(category_id, native_column, correct_answer)
+            options.append(correct_answer)  # Add the correct answer to the options
+
+            random.shuffle(options)  # Shuffle options to randomize the position of the correct answer
+
+            questions.append({
+                'question': question_text,
+                'correct_answer': correct_answer,
+                'options': options
+            })
+
+        return questions
+
+    @staticmethod
     def get_language_column_name(language_id):
         # Ensure the language_id is an integer to avoid data type mismatch
         try:
@@ -125,3 +167,34 @@ class CategoriesService:
     def get_all_categories():
         categories = CategoriesRepository.get_all_categories()
         return [{'id': cat.id, 'name': cat.name} for cat in categories]
+
+
+class QuizService:
+    @staticmethod
+    def get_quiz_questions(native_language_id, foreign_language_id, category_id):
+        words = WordsRepository.get_words_by_category(category_id)
+
+        if not words:
+            return []
+
+        native_column = WordsRepository.get_language_column_name(native_language_id)
+        foreign_column = WordsRepository.get_language_column_name(foreign_language_id)
+
+        # If either column name is None (invalid language ID), return an error message
+        if not native_column or not foreign_column:
+            logging.error(f"Invalid language ID(s): native={native_language_id}, foreign={foreign_language_id}")
+            return [{'error': 'Invalid native or foreign language selection'}]
+
+        # Generate quiz questions
+        questions = []
+        for word in words:
+            correct_answer = getattr(word, native_column, "[No Translation]")
+            question = getattr(word, foreign_column, "[No Translation]")
+
+            # Create a question entry
+            questions.append({
+                'question': question,
+                'correct_answer': correct_answer
+            })
+
+        return questions
