@@ -65,6 +65,13 @@ class WordsRepository:
 
     @staticmethod
     def get_language_column_name(language_id):
+        # Ensure the language_id is an integer to avoid data type mismatch
+        try:
+            language_id = int(language_id)
+        except ValueError:
+            return None
+
+        # Map language IDs to the correct column names in the database
         language_map = {
             1: 'english',
             2: 'hungarian',
@@ -73,7 +80,9 @@ class WordsRepository:
             5: 'czech',
             6: 'italian'
         }
-        return language_map.get(language_id, "unknown_language")
+
+        column_name = language_map.get(language_id)
+        return column_name
 
 
 class CategoriesRepository:
@@ -135,7 +144,15 @@ class QuizResultRepository:
     def add_quiz_result(user_id, language_id, category_id, score, date=None):
         if date is None:
             date = datetime.utcnow()
-        quiz_result = QuizResult(user_id=user_id, language_id=language_id, category_id=category_id, score=score, date=date)
+
+        quiz_result = QuizResult(
+            user_id=user_id,
+            language_id=language_id,
+            category_id=category_id,
+            score=score,
+            date=date
+        )
+
         db.session.add(quiz_result)
         db.session.commit()
         return quiz_result
@@ -161,7 +178,7 @@ class QuizResultDetailRepository:
         detail = QuizResultDetail(
             quiz_result_id=quiz_result_id,
             word_id=word_id,
-            is_correct=is_correct
+            correct=is_correct
         )
         db.session.add(detail)
         db.session.commit()

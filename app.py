@@ -123,7 +123,13 @@ def get_known_words(user_id, category_id):
 @jwt_required()
 def save_quiz_result():
     data = request.get_json()
-    user_id = get_jwt_identity()['id']  # Assuming user_id is in the JWT identity
+    user_email = get_jwt_identity()['email']  # Extract email from the JWT token
+    user = UserRepository.get_user_by_email(user_email)  # Retrieve user based on email
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    user_id = user.id
     language_id = data.get('language_id')
     category_id = data.get('category_id')
     score = data.get('score')

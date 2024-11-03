@@ -91,6 +91,14 @@ class QuizResult(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     language_id = db.Column(db.Integer, db.ForeignKey('languages.id'), nullable=False)  # New column
     score = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, user_id, language_id, category_id, score, date=None):
+        self.user_id = user_id
+        self.language_id = language_id
+        self.category_id = category_id
+        self.score = score
+        self.date = date or datetime.utcnow()
 
 
 class QuizResultDetail(db.Model):
