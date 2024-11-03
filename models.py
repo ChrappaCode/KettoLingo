@@ -66,22 +66,36 @@ class Word(db.Model):
     italian = db.Column(db.String(100), nullable=False)
 
 
-# User Progress Model
 class UserProgress(db.Model):
     __tablename__ = 'user_progress'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)  # In a real project, this would be a ForeignKey to the Users table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     learned_words = db.Column(db.Integer, default=0)
-    quiz_score = db.Column(db.Integer, default=0)
+    quiz_score = db.Column(db.Integer, nullable=True)
 
 
-# Quiz Results Model
+class UserKnownWord(db.Model):
+    __tablename__ = 'user_known_words'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    word_id = db.Column(db.Integer, db.ForeignKey('words.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+
+
 class QuizResult(db.Model):
     __tablename__ = 'quiz_results'
+
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)  # ForeignKey to Users table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+    language_id = db.Column(db.Integer, db.ForeignKey('languages.id'), nullable=False)  # New column
     score = db.Column(db.Integer, nullable=False)
-    correct_answers = db.Column(db.Integer)
-    incorrect_answers = db.Column(db.Integer)
+
+
+class QuizResultDetail(db.Model):
+    __tablename__ = 'quiz_result_details'
+    id = db.Column(db.Integer, primary_key=True)
+    quiz_result_id = db.Column(db.Integer, db.ForeignKey('quiz_results.id'), nullable=False)
+    word_id = db.Column(db.Integer, db.ForeignKey('words.id'), nullable=False)
+    correct = db.Column(db.Boolean, nullable=False)
