@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+from sqlalchemy import JSON
+
 # This instance should be initialized by app.py
 db = SQLAlchemy()
 
@@ -105,5 +107,7 @@ class QuizResultDetail(db.Model):
     __tablename__ = 'quiz_result_details'
     id = db.Column(db.Integer, primary_key=True)
     quiz_result_id = db.Column(db.Integer, db.ForeignKey('quiz_results.id'), nullable=False)
-    word_id = db.Column(db.Integer, db.ForeignKey('words.id'), nullable=False)
-    correct = db.Column(db.Boolean, nullable=False)
+    details = db.Column(JSON, nullable=False)  # New JSON column to store all answer details
+
+    def __repr__(self):
+        return f'<QuizResultDetail {self.id}>'

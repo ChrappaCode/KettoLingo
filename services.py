@@ -178,14 +178,11 @@ class QuizResultsService:
         # Save the main quiz result
         quiz_result = QuizResultRepository.add_quiz_result(user_id, language_id, category_id, score, date)
 
-        # Save each detail in result_details
+        # Combine all details into one JSON object
         if result_details:
-            for detail in result_details:
-                QuizResultDetailRepository.add_quiz_result_detail(
-                    quiz_result_id=quiz_result.id,
-                    word_id=detail['word_id'],
-                    is_correct=detail['is_correct']
-                )
+            details_json = [{"word_id": detail["word_id"], "is_correct": detail["is_correct"]} for detail in
+                            result_details]
+            QuizResultDetailRepository.add_quiz_result_detail(quiz_result_id=quiz_result.id, details_json=details_json)
 
         return {"message": "Quiz result saved successfully"}
 

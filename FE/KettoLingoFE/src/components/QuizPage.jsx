@@ -80,7 +80,7 @@ function QuizPage() {
     const percentageScore = (score / questions.length) * 100;
 
     const payload = {
-      language_id: nativeLanguageId,
+      language_id: foreignLanguageId,
       category_id: categoryId,
       score: percentageScore,
       result_details: answers, // Use the final answers array

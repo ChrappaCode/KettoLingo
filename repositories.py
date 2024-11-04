@@ -173,12 +173,10 @@ class QuizResultRepository:
 
 class QuizResultDetailRepository:
     @staticmethod
-    def add_quiz_result_detail(quiz_result_id, word_id, is_correct):
-        # Assuming the model has an attribute called 'is_correct'
+    def add_quiz_result_detail(quiz_result_id, details_json):
         detail = QuizResultDetail(
             quiz_result_id=quiz_result_id,
-            word_id=word_id,
-            correct=is_correct
+            details=details_json  # Save the JSON data directly
         )
         db.session.add(detail)
         db.session.commit()
