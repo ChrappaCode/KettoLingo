@@ -4,7 +4,7 @@ import styles from "./profile.module.css";
 import Header from "./Header.jsx";
 
 function Profile() {
-  const [formData, setFormData] = useState({ username: '', email: '', native_language_id: '' });
+  const [formData, setFormData] = useState({ username: '', email: '', native_language_id: 'NoChangePlaceholder' });
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState({ message: '', type: '' });
   const [languages, setLanguages] = useState([]);
@@ -14,7 +14,8 @@ function Profile() {
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [newLanguageId, setNewLanguageId] = useState('');
+  const [newLanguageId, setNewLanguageId] = useState('NoChangePlaceholder');
+  const [displayedLanguage, setDisplayedLanguage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,9 +25,6 @@ function Profile() {
       return;
     }
 
-    // Fetch profile data
-    fetchProfile(token);
-
     // Fetch available languages
     fetch('http://localhost:5000/api/languages', {
       headers: {
@@ -35,11 +33,15 @@ function Profile() {
       }
     })
       .then(response => response.json())
-      .then(data => setLanguages(data))
+      .then(data => {
+        setLanguages(data);
+        // Fetch profile data after languages are set
+        fetchProfile(token, data);
+      })
       .catch(error => console.error('Error fetching languages:', error));
   }, [navigate]);
 
-  const fetchProfile = (token) => {
+  const fetchProfile = (token, languages) => {
     fetch('http://localhost:5000/api/profile', {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -48,7 +50,8 @@ function Profile() {
     })
       .then(response => response.json())
       .then(data => {
-        setFormData({ username: data.username, email: data.email, native_language_id: data.native_language_id || '' });
+        setFormData({ username: data.username, email: data.email, native_language_id: data.native_language_id || 'NoChangePlaceholder' });
+        setDisplayedLanguage(languages.find(lang => lang.id === data.native_language_id)?.name || '');
         setLoading(false);
       })
       .catch(error => {
@@ -60,11 +63,15 @@ function Profile() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    if (name === 'native_language_id') {
+      setNewLanguageId(value);
+      setDisplayedLanguage(languages.find(lang => lang.id === value)?.name || '');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.native_language_id !== newLanguageId) {
+    if (newLanguageId !== 'NoChangePlaceholder' && formData.native_language_id !== newLanguageId) {
       setShowConfirmation(true);
     } else {
       await updateProfile();
@@ -81,13 +88,15 @@ function Profile() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ username: formData.username, native_language_id: formData.native_language_id }),
+          body: JSON.stringify({ username: formData.username, native_language_id: newLanguageId }),
         });
 
         if (response.ok) {
           setNotification({ message: 'Profile updated successfully!', type: 'success' });
+          window.location.reload(); // Refresh the page
         } else {
-          setNotification({ message: 'Failed to update profile.', type: 'error' });
+          const errorData = await response.json();
+          setNotification({ message: errorData.error || 'Failed to update profile', type: 'error' });
         }
       } catch (error) {
         console.error('Error updating profile:', error);
@@ -122,7 +131,8 @@ function Profile() {
 
   const handleCancelChangeLanguage = () => {
     setShowConfirmation(false);
-    setNewLanguageId('');
+    setNewLanguageId('NoChangePlaceholder');
+    setDisplayedLanguage(languages.find(lang => lang.id === formData.native_language_id)?.name || '');
   };
 
   const fetchCategories = (languageId) => {
@@ -223,7 +233,7 @@ function Profile() {
               type="text"
               name="native_language"
               placeholder="Native Language"
-              value={languages.find(lang => lang.id === formData.native_language_id)?.name || ''}
+              value={displayedLanguage}
               readOnly
               className={styles["profile-input"]}
             />
@@ -233,11 +243,9 @@ function Profile() {
               onChange={handleChange}
               className={styles["profile-select"]}
             >
-              <option value="bogiFix">Change your native language</option>
-              {filteredLanguages.map(language => (
-                <option key={language.id} value={language.id}>
-                  {language.name}
-                </option>
+              <option key="NoChangePlaceholder" value="NoChangePlaceholder">Change your native language</option>
+              {filteredLanguages.map(lang => (
+                <option key={lang.id} value={lang.id}>{lang.name}</option>
               ))}
             </select>
             <button type="submit" className={styles["profile-button"]}>Update Profile</button>

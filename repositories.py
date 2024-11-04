@@ -152,8 +152,16 @@ class UserKnownWordRepository:
 class QuizResultRepository:
     @staticmethod
     def delete_quiz_results_by_user(user_id):
-        QuizResultDetail.query.filter_by(user_id=user_id).delete()
+        # First, get all quiz results for the user
+        quiz_results = QuizResult.query.filter_by(user_id=user_id).all()
+
+        # Delete all quiz result details associated with these quiz results
+        for quiz_result in quiz_results:
+            QuizResultDetail.query.filter_by(quiz_result_id=quiz_result.id).delete()
+
+        # Delete the quiz results themselves
         QuizResult.query.filter_by(user_id=user_id).delete()
+
         db.session.commit()
 
     @staticmethod

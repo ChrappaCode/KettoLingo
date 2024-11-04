@@ -76,11 +76,33 @@ def update_profile():
     data = request.get_json()
     user = UserRepository.get_user_by_email(current_user['email'])
 
-    if user.native_language_id != data.get('native_language_id') and data.get('native_language_id') != "bogiFix":
-        # Delete quiz results and details
-        QuizResultRepository.delete_quiz_results_by_user(user.id)
+    if data.get('native_language_id') == "NoChangePlaceholder":
+        # Update only the username
+        updated_data = {'username': data.get('username')}
+    else:
+        # Update both username and native language
+        updated_data = {
+            'username': data.get('username'),
+            'native_language_id': data.get('native_language_id')
+        }
 
-    return jsonify(*ProfileService.update_profile(user.id, data))
+        if user.native_language_id != data.get('native_language_id'):
+            # Delete quiz results and details if the native language is changed
+            QuizResultRepository.delete_quiz_results_by_user(user.id)
+
+    return jsonify(*ProfileService.update_profile(user.id, updated_data))
+
+
+@app.route('/api/delete_quiz_results', methods=['DELETE'])
+@jwt_required()
+def delete_quiz_results():
+    current_user = get_jwt_identity()
+    user = UserRepository.get_user_by_email(current_user['email'])
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    QuizResultRepository.delete_quiz_results_by_user(user.id)
+    return jsonify({"message": "Quiz results deleted successfully"}), 200
 
 
 # Get all languages
