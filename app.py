@@ -11,10 +11,12 @@ from repositories import UserRepository, TokenBlocklistRepository, QuizResultRep
     WordsRepository
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": f"http://{os.getenv('KETTO_FE', default='localhost')}:5173"}}, supports_credentials=True, expose_headers="Authorization")
+CORS(app, resources={r"/*": {"origins": f"http://{os.getenv('KETTO_FE', default='localhost')}:5173"}},
+     supports_credentials=True, expose_headers="Authorization")
 
 # Configure PostgreSQL database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('KETTO_DB', default='postgresql://postgres:postgres@localhost/KettoLingo')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('KETTO_DB',
+                                                  default='postgresql://postgres:postgres@localhost/KettoLingo')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize extensions
@@ -25,11 +27,13 @@ migrate = Migrate(app, db)
 
 app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
 
+
 # Check if token is blacklisted
 @jwt.token_in_blocklist_loader
 def check_if_token_in_blocklist(jwt_header, jwt_payload):
     jti = jwt_payload['jti']
     return TokenBlocklistRepository.is_token_blacklisted(jti)
+
 
 # Registration Route
 @app.route('/api/register', methods=['POST'])
@@ -37,11 +41,13 @@ def register():
     data = request.get_json()
     return jsonify(*AuthService.register_user(data['username'], data['email'], data['password']))
 
+
 # Login Route
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
     return jsonify(*AuthService.login_user(data['email'], data['password']))
+
 
 # Logout Route
 @app.route('/api/logout', methods=['POST'])
@@ -49,6 +55,7 @@ def login():
 def logout():
     jti = get_jwt()['jti']
     return jsonify(*AuthService.logout_user(jti))
+
 
 # Profile Route (GET)
 @app.route('/api/profile', methods=['GET'])
@@ -60,6 +67,7 @@ def get_profile():
         return jsonify(profile_data), 404
     return jsonify(profile_data), 200
 
+
 # Profile Route (PUT)
 @app.route('/api/profile', methods=['PUT'])
 @jwt_required()
@@ -67,7 +75,13 @@ def update_profile():
     current_user = get_jwt_identity()
     data = request.get_json()
     user = UserRepository.get_user_by_email(current_user['email'])
+
+    if user.native_language_id != data.get('native_language_id') and data.get('native_language_id') != "bogiFix":
+        # Delete quiz results and details
+        QuizResultRepository.delete_quiz_results_by_user(user.id)
+
     return jsonify(*ProfileService.update_profile(user.id, data))
+
 
 # Get all languages
 @app.route('/api/languages', methods=['GET'])
@@ -78,14 +92,32 @@ def get_languages():
         return jsonify({"error": "No languages found"}), 404
     return jsonify(languages_data), 200
 
-# Get words for learning
-@app.route('/api/learn/<native_language_id>/<foreign_language_id>/<category_id>', methods=['GET'])
+
+# Get all languages except native
+@app.route('/api/languages_dropdown', methods=['GET'])
 @jwt_required()
-def get_words_for_learning(native_language_id, foreign_language_id, category_id):
+def get_languages_dropdown():
+    current_user = get_jwt_identity()
+    user = UserRepository.get_user_by_email(current_user['email'])
+    native_language_id = user.native_language_id
+    languages_data = LanguagesService.get_all_languages_except_native(native_language_id)
+    if not languages_data:
+        return jsonify({"error": "No languages found"}), 404
+    return jsonify(languages_data), 200
+
+
+# Get words for learning
+@app.route('/api/learn/<foreign_language_id>/<category_id>', methods=['GET'])
+@jwt_required()
+def get_words_for_learning(foreign_language_id, category_id):
+    current_user = get_jwt_identity()
+    user = UserRepository.get_user_by_email(current_user['email'])
+    native_language_id = user.native_language_id
     words = WordsService.get_words_for_learning(native_language_id, foreign_language_id, category_id)
     if not words:
         return jsonify({"error": "No words found for the selected languages and category"}), 404
     return jsonify(words), 200
+
 
 # Get all categories
 @app.route('/api/categories', methods=['GET'])
@@ -96,14 +128,19 @@ def get_categories():
         return jsonify({"error": "No categories found"}), 404
     return jsonify(categories), 200
 
+
 # Get quiz questions
-@app.route('/api/quiz/<native_language_id>/<foreign_language_id>/<category_id>', methods=['GET'])
+@app.route('/api/quiz/<foreign_language_id>/<category_id>', methods=['GET'])
 @jwt_required()
-def get_quiz_questions(native_language_id, foreign_language_id, category_id):
+def get_quiz_questions(foreign_language_id, category_id):
+    current_user = get_jwt_identity()
+    user = UserRepository.get_user_by_email(current_user['email'])
+    native_language_id = user.native_language_id
     questions = QuizService.get_quiz_questions(native_language_id, foreign_language_id, category_id)
     if not questions:
         return jsonify({"error": "No quiz questions found for the selected languages and category"}), 404
     return jsonify(questions), 200
+
 
 # Get user progress
 @app.route('/api/user_progress/<int:user_id>', methods=['GET'])
@@ -112,12 +149,14 @@ def get_user_progress(user_id):
     progress = UserProgressService.get_user_progress(user_id)
     return jsonify(progress), 200
 
+
 # Get known words for user and category
 @app.route('/api/known_words/<int:user_id>/<int:category_id>', methods=['GET'])
 @jwt_required()
 def get_known_words(user_id, category_id):
     known_words = UserKnownWordsService.get_known_words(user_id, category_id)
     return jsonify(known_words), 200
+
 
 # Save quiz result
 @app.route('/api/quiz_result', methods=['POST'])
@@ -148,7 +187,9 @@ def protected():
     if request.method == 'OPTIONS':
         return '', 200
     current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
+    user = UserRepository.get_user_by_email(current_user['email'])
+    native_language = LanguagesService.get_language_by_id(user.native_language_id)
+    return jsonify(logged_in_as=current_user, native_language=native_language), 200
 
 
 # Get quizzes by user and category
@@ -157,20 +198,18 @@ def protected():
 def get_user_quizzes():
     email = request.args.get('email')
     category_id = request.args.get('categoryId')
-    language_id = request.args.get('languageId')
+    foreign_language_id = request.args.get('languageId')
 
-    if not email or not category_id or not language_id:
+    if not email or not category_id or not foreign_language_id:
         return jsonify({"error": "Missing email, categoryId, or languageId parameter"}), 400
 
-    # Retrieve the user by email
     user = UserRepository.get_user_by_email(email)
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    # Fetch quizzes by user_id, category_id, and language_id
-    quizzes = QuizResultRepository.get_quizzes_by_user_category_and_language(user.id, category_id, language_id)
+    native_language_id = user.native_language_id
+    quizzes = QuizResultRepository.get_quizzes_by_user_category_and_language(user.id, category_id, foreign_language_id)
 
-    # Format the response
     quiz_data = [{
         "id": quiz.id,
         "score": quiz.score,
@@ -210,6 +249,7 @@ def get_quiz_details(quiz_id):
             })
 
     return jsonify(detailed_results), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True)

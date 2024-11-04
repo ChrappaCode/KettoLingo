@@ -6,7 +6,6 @@ import Header from './Header.jsx';
 function Overview() {
   const [data, setData] = useState(null);
   const [languages, setLanguages] = useState([]);
-  const [nativeLanguage, setNativeLanguage] = useState('');
   const [foreignLanguage, setForeignLanguage] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -22,6 +21,7 @@ function Overview() {
     const token = localStorage.getItem('jwtToken');
     if (!token) {
       navigate('/login');
+      return;
     }
 
     const fetchProtectedData = fetch('http://localhost:5000/api/protected', {
@@ -37,30 +37,32 @@ function Overview() {
         }
         return response.json();
       })
-      .then(data => setData(data))
+      .then(data => {
+        setData(data);
+        // Fetch all languages and set them in the state
+        fetch('http://localhost:5000/api/languages_dropdown', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+          .then(response => response.json())
+          .then(languages => {
+            if (languages.length === 0) {
+              setError('No languages available.');
+            }
+            setLanguages(languages);
+          })
+          .catch(error => {
+            console.error('Error fetching languages:', error);
+            setError('Failed to load languages.');
+          });
+      })
       .catch(error => {
         console.error('Error fetching protected data:', error);
         setError('Failed to load user data.');
         navigate('/login');
-      });
-
-    const fetchLanguages = fetch('http://localhost:5000/api/languages', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .then(languages => {
-        if (languages.length === 0) {
-          setError('No languages available.');
-        }
-        setLanguages(languages);
-      })
-      .catch(error => {
-        console.error('Error fetching languages:', error);
-        setError('Failed to load languages.');
       });
 
     const fetchCategories = fetch('http://localhost:5000/api/categories', {
@@ -82,11 +84,11 @@ function Overview() {
         setError('Failed to load categories.');
       });
 
-    Promise.all([fetchProtectedData, fetchLanguages, fetchCategories]).then(() => setIsLoading(false));
+    Promise.all([fetchProtectedData, fetchCategories]).then(() => setIsLoading(false));
   }, [navigate]);
 
   useEffect(() => {
-    if (nativeLanguage && foreignLanguage && selectedCategory) {
+    if (foreignLanguage && selectedCategory) {
       const timer = setInterval(() => {
         if (currentIndex < textToDisplay.length) {
           setDisplayText((prev) => prev + textToDisplay[currentIndex]);
@@ -96,17 +98,12 @@ function Overview() {
         }
       }, 100);
 
-
       return () => clearInterval(timer);
     } else {
       setDisplayText('');
       setCurrentIndex(0);
     }
-  }, [nativeLanguage, foreignLanguage, selectedCategory, currentIndex]);
-
-  const handleNativeLanguageChange = (e) => {
-    setNativeLanguage(e.target.value);
-  };
+  }, [foreignLanguage, selectedCategory, currentIndex]);
 
   const handleForeignLanguageChange = (e) => {
     setForeignLanguage(e.target.value);
@@ -117,22 +114,14 @@ function Overview() {
   };
 
   const handleStartLearning = () => {
-    console.log("Native Language ID: ", nativeLanguage);
-    console.log("Foreign Language ID: ", foreignLanguage);
-    console.log("Category ID: ", selectedCategory);
-
-    if (nativeLanguage && foreignLanguage && selectedCategory) {
-      navigate(`/learn/${nativeLanguage}/${foreignLanguage}/${selectedCategory}`);
+    if (data && data.native_language && foreignLanguage && selectedCategory) {
+      navigate(`/learn/${foreignLanguage}/${selectedCategory}`);
     }
   };
 
   const handleStartQuiz = () => {
-    console.log("Native Language ID: ", nativeLanguage);
-    console.log("Foreign Language ID: ", foreignLanguage);
-    console.log("Category ID: ", selectedCategory);
-
-    if (nativeLanguage && foreignLanguage && selectedCategory) {
-      navigate(`/quiz/${nativeLanguage}/${foreignLanguage}/${selectedCategory}`);
+    if (data && data.native_language && foreignLanguage && selectedCategory) {
+      navigate(`/quiz/${foreignLanguage}/${selectedCategory}`);
     }
   };
 
@@ -160,22 +149,6 @@ function Overview() {
             )}
           </p>
 
-          <div>
-            <label className={styles.label_select}>Select Your Native Language: </label>
-            <br/>
-            <select className={styles.select} value={nativeLanguage} onChange={handleNativeLanguageChange}>
-              <option value="" disabled>Select a native language</option>
-              {languages.length > 0 ? (
-                languages.map((lang) => (
-                  <option key={lang.id} value={lang.id}>
-                    {lang.name}
-                  </option>
-                ))
-              ) : (
-                <option disabled>No languages available</option>
-              )}
-            </select>
-          </div>
           <div>
             <label className={styles.label_select}>Select a Foreign Language to Learn: </label>
             <br/>
@@ -209,7 +182,7 @@ function Overview() {
             </select>
           </div>
 
-          {nativeLanguage && foreignLanguage && selectedCategory && (
+          {foreignLanguage && selectedCategory && (
             <div>
               <h3>{displayText}</h3>
               <button className={styles.button} onClick={handleStartLearning}>

@@ -14,7 +14,7 @@ function QuizPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
-    fetch(`http://localhost:5000/api/quiz/${nativeLanguageId}/${foreignLanguageId}/${categoryId}`, {
+    fetch(`http://localhost:5000/api/quiz/${foreignLanguageId}/${categoryId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

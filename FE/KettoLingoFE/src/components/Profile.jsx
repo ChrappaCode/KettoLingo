@@ -4,7 +4,7 @@ import styles from "./profile.module.css";
 import Header from "./Header.jsx";
 
 function Profile() {
-  const [formData, setFormData] = useState({ username: '', email: '' });
+  const [formData, setFormData] = useState({ username: '', email: '', native_language_id: '' });
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState({ message: '', type: '' });
   const [languages, setLanguages] = useState([]);
@@ -13,6 +13,8 @@ function Profile() {
   const [quizDetails, setQuizDetails] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [newLanguageId, setNewLanguageId] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,7 +48,7 @@ function Profile() {
     })
       .then(response => response.json())
       .then(data => {
-        setFormData({ username: data.username, email: data.email });
+        setFormData({ username: data.username, email: data.email, native_language_id: data.native_language_id || '' });
         setLoading(false);
       })
       .catch(error => {
@@ -57,13 +59,19 @@ function Profile() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name !== 'email') {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.native_language_id !== newLanguageId) {
+      setShowConfirmation(true);
+    } else {
+      await updateProfile();
+    }
+  };
+
+  const updateProfile = async () => {
     const token = localStorage.getItem('jwtToken');
     if (token) {
       try {
@@ -73,7 +81,7 @@ function Profile() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ username: formData.username }),
+          body: JSON.stringify({ username: formData.username, native_language_id: formData.native_language_id }),
         });
 
         if (response.ok) {
@@ -86,6 +94,35 @@ function Profile() {
         setNotification({ message: 'An error occurred. Please try again.', type: 'error' });
       }
     }
+  };
+
+  const handleConfirmChangeLanguage = async () => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      try {
+        // Delete quiz results and details
+        await fetch('http://localhost:5000/api/delete_quiz_results', {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // Update native language
+        setFormData({ ...formData, native_language_id: newLanguageId });
+        setShowConfirmation(false);
+        await updateProfile();
+      } catch (error) {
+        console.error('Error deleting quiz results:', error);
+        setNotification({ message: 'An error occurred. Please try again.', type: 'error' });
+      }
+    }
+  };
+
+  const handleCancelChangeLanguage = () => {
+    setShowConfirmation(false);
+    setNewLanguageId('');
   };
 
   const fetchCategories = (languageId) => {
@@ -123,22 +160,22 @@ function Profile() {
   };
 
   const fetchQuizDetails = (quizId) => {
-  const token = localStorage.getItem('jwtToken');
-  fetch(`http://localhost:5000/api/quiz-details/${quizId}`, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }
-  })
-    .then(response => response.json())
-    .then(data => {
-      setQuizDetails(data.map((detail) => ({
-        word: detail.word,  // Displayed word
-        is_correct: detail.is_correct ? 'Yes' : 'No'  // Correctness as Yes or No
-      })));
+    const token = localStorage.getItem('jwtToken');
+    fetch(`http://localhost:5000/api/quiz-details/${quizId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
     })
-    .catch(error => console.error('Error fetching quiz details:', error));
-};
+      .then(response => response.json())
+      .then(data => {
+        setQuizDetails(data.map((detail) => ({
+          word: detail.word,
+          is_correct: detail.is_correct ? 'Yes' : 'No'
+        })));
+      })
+      .catch(error => console.error('Error fetching quiz details:', error));
+  };
 
   const closeNotification = () => {
     setNotification({ message: '', type: '' });
@@ -147,6 +184,9 @@ function Profile() {
   if (loading) {
     return <p className={styles["profile-loading"]}>Loading...</p>;
   }
+
+  // Filter languages to exclude the native language
+  const filteredLanguages = languages.filter(lang => lang.id !== formData.native_language_id);
 
   return (
     <div>
@@ -179,8 +219,37 @@ function Profile() {
               readOnly
               className={styles["profile-input"]}
             />
+            <input
+              type="text"
+              name="native_language"
+              placeholder="Native Language"
+              value={languages.find(lang => lang.id === formData.native_language_id)?.name || ''}
+              readOnly
+              className={styles["profile-input"]}
+            />
+            <select
+              name="native_language_id"
+              value={formData.native_language_id}
+              onChange={handleChange}
+              className={styles["profile-select"]}
+            >
+              <option value="bogiFix">Change your native language</option>
+              {filteredLanguages.map(language => (
+                <option key={language.id} value={language.id}>
+                  {language.name}
+                </option>
+              ))}
+            </select>
             <button type="submit" className={styles["profile-button"]}>Update Profile</button>
           </form>
+
+          {showConfirmation && (
+            <div className={styles.confirmationDialog}>
+              <p>If you change your native language, the history of your quizzes will be deleted permanently. Are you sure you want to change your native language?</p>
+              <button onClick={handleConfirmChangeLanguage}>Yes</button>
+              <button onClick={handleCancelChangeLanguage}>No</button>
+            </div>
+          )}
 
           <div>
             <h3>Select a Language</h3>
@@ -218,7 +287,7 @@ function Profile() {
                     onClick={() => fetchQuizDetails(quiz.id)}
                     className={styles["quiz-button"]}
                   >
-                    {quiz.date} - Score: {quiz.score}%
+                    {quiz.date} - Score: {quiz.score}
                   </button>
                 ))}
               </div>
@@ -228,9 +297,10 @@ function Profile() {
               <div>
                 <h4>Quiz Details</h4>
                 {quizDetails.map((detail, index) => (
-                  <p key={index}>
-                    Word: {detail.word} - Correct: {detail.is_correct}
-                  </p>
+                  <div key={index}>
+                    <p>Word: {detail.word}</p>
+                    <p>Correct: {detail.is_correct}</p>
+                  </div>
                 ))}
               </div>
             )}

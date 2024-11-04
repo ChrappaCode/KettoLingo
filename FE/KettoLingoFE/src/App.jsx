@@ -17,9 +17,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/overview" element={<Overview />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/learn/:nativeLanguageId/:foreignLanguageId/:categoryId" element={<LearningPage />} />
+          <Route path="/learn/:foreignLanguageId/:categoryId" element={<LearningPage />} />
           <Route path="/" element={<Login />} />
-          <Route path="/quiz/:nativeLanguageId/:foreignLanguageId/:categoryId" element={<QuizPage />} />
+          <Route path="/quiz/:foreignLanguageId/:categoryId" element={<QuizPage />} />
         </Routes>
       </div>
     </Router>

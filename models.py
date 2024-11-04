@@ -14,11 +14,14 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    native_language_id = db.Column(db.Integer, db.ForeignKey('languages.id'), nullable=True)  # New column
+    native_language = db.relationship('Language', backref=db.backref('users', lazy=True))
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, native_language_id=None):
         self.username = username
         self.email = email
         self.password = password
+        self.native_language_id = native_language_id
 
 
 # Token Blocklist Model

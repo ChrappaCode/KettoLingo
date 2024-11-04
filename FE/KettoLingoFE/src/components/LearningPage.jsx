@@ -12,7 +12,7 @@ function LearningPage() {
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
 
-    fetch(`http://localhost:5000/api/learn/${nativeLanguageId}/${foreignLanguageId}/${categoryId}`, {
+    fetch(`http://localhost:5000/api/learn/${foreignLanguageId}/${categoryId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

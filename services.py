@@ -38,21 +38,43 @@ class ProfileService:
     @staticmethod
     def get_profile(email):
         user = UserRepository.get_user_by_email(email)
-        if user:
-            return {'username': user.username, 'email': user.email}
-        return {"error": "User not found"}
+        if not user:
+            return {"error": "User not found"}
+        return {
+            "username": user.username,
+            "email": user.email,
+            "native_language_id": user.native_language_id,
+            "native_language": user.native_language.name if user.native_language else None
+        }
 
     @staticmethod
     def update_profile(user_id, data):
         user = UserRepository.update_user(user_id, data)
-        return {"message": "Profile updated successfully", "username": user.username, "email": user.email}, 200
+        return {
+            "message": "Profile updated successfully",
+            "username": user.username,
+            "email": user.email,
+            "native_language_id": user.native_language_id
+        }, 200
 
 
 class LanguagesService:
     @staticmethod
+    def get_language_by_id(language_id):
+        language = LanguagesRepository.get_language_by_id(language_id)
+        if language:
+            return {'id': language.id, 'name': language.name}
+        return None
+
+    @staticmethod
     def get_all_languages():
         languages = LanguagesRepository.get_all_languages()
         return [{'id': lang.id, 'name': lang.name} for lang in languages]
+
+    @staticmethod
+    def get_all_languages_except_native(native_language_id):
+        languages = LanguagesRepository.get_all_languages()
+        return [{'id': lang.id, 'name': lang.name} for lang in languages if lang.id != native_language_id]
 
 
 class WordsService:
@@ -204,7 +226,6 @@ class QuizResultsService:
             QuizResultDetailRepository.add_quiz_result_detail(quiz_result_id=quiz_result.id, details_json=details_json)
 
         return {"message": "Quiz result saved successfully"}
-
 
 class QuizResultsDetailService:
     @staticmethod

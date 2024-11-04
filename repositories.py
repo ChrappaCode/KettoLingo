@@ -26,6 +26,8 @@ class UserRepository:
             user.username = data['username']
         if 'email' in data:
             user.email = data['email']
+        if 'native_language_id' in data:
+            user.native_language_id = data['native_language_id']
         db.session.commit()
         return user
 
@@ -43,6 +45,10 @@ class TokenBlocklistRepository:
 
 
 class LanguagesRepository:
+    @staticmethod
+    def get_language_by_id(language_id):
+        return Language.query.get(language_id)
+
     @staticmethod
     def get_all_languages():
         return Language.query.all()
@@ -144,6 +150,12 @@ class UserKnownWordRepository:
 
 
 class QuizResultRepository:
+    @staticmethod
+    def delete_quiz_results_by_user(user_id):
+        QuizResultDetail.query.filter_by(user_id=user_id).delete()
+        QuizResult.query.filter_by(user_id=user_id).delete()
+        db.session.commit()
+
     @staticmethod
     def get_quiz_result_by_id(quiz_id):
         return QuizResult.query.filter_by(id=quiz_id).first()
