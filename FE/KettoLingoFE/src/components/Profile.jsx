@@ -123,17 +123,22 @@ function Profile() {
   };
 
   const fetchQuizDetails = (quizId) => {
-    const token = localStorage.getItem('jwtToken');
-    fetch(`http://localhost:5000/api/quiz-details/${quizId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      }
+  const token = localStorage.getItem('jwtToken');
+  fetch(`http://localhost:5000/api/quiz-details/${quizId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      setQuizDetails(data.map((detail) => ({
+        word: detail.word,  // Displayed word
+        is_correct: detail.is_correct ? 'Yes' : 'No'  // Correctness as Yes or No
+      })));
     })
-      .then(response => response.json())
-      .then(data => setQuizDetails(data))
-      .catch(error => console.error('Error fetching quiz details:', error));
-  };
+    .catch(error => console.error('Error fetching quiz details:', error));
+};
 
   const closeNotification = () => {
     setNotification({ message: '', type: '' });
@@ -224,7 +229,7 @@ function Profile() {
                 <h4>Quiz Details</h4>
                 {quizDetails.map((detail, index) => (
                   <p key={index}>
-                    Word: {detail.word} - Correct: {detail.is_correct ? 'Yes' : 'No'}
+                    Word: {detail.word} - Correct: {detail.is_correct}
                   </p>
                 ))}
               </div>

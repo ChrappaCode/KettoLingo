@@ -10,8 +10,7 @@ function QuizPage() {
   const [isQuizComplete, setIsQuizComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [answers, setAnswers] = useState([]); // Temporary storage for answers
-  const [counter, setCounter] = useState(1); // Counter for id placeholder
+  const [answers, setAnswers] = useState([]); // Stores answers with actual word_id
 
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
@@ -52,10 +51,10 @@ function QuizPage() {
   const handleNextQuestion = () => {
     const isCorrect = selectedOption === currentQuestion.correct_answer;
 
-    // Store both word_id and is_correct for each answer
+    // Ensure that word_id is included in answers array
     setAnswers(prevAnswers => [
       ...prevAnswers,
-      { word_id: counter, is_correct: isCorrect }
+      { word_id: currentQuestion.word_id, is_correct: isCorrect }
     ]);
 
     // Update score if the answer is correct
@@ -70,9 +69,6 @@ function QuizPage() {
     } else {
       setIsQuizComplete(true); // Mark quiz as complete
     }
-
-    // Increment the counter
-    setCounter(counter + 1);
   };
 
   const submitQuizResults = () => {
@@ -83,7 +79,7 @@ function QuizPage() {
       language_id: foreignLanguageId,
       category_id: categoryId,
       score: percentageScore,
-      result_details: answers, // Use the final answers array
+      result_details: answers, // Using answers array with word_id and is_correct
     };
 
     fetch('http://localhost:5000/api/quiz_result', {

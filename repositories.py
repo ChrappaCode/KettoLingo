@@ -50,6 +50,10 @@ class LanguagesRepository:
 
 class WordsRepository:
     @staticmethod
+    def get_word_by_id(word_id):
+        return Word.query.get(word_id)
+
+    @staticmethod
     def get_words_by_category(category_id):
         return Word.query.filter_by(category_id=category_id).all()
 
@@ -141,6 +145,10 @@ class UserKnownWordRepository:
 
 class QuizResultRepository:
     @staticmethod
+    def get_quiz_result_by_id(quiz_id):
+        return QuizResult.query.filter_by(id=quiz_id).first()
+
+    @staticmethod
     def add_quiz_result(user_id, language_id, category_id, score, date=None):
         if date is None:
             date = datetime.utcnow()
@@ -174,9 +182,10 @@ class QuizResultRepository:
 class QuizResultDetailRepository:
     @staticmethod
     def add_quiz_result_detail(quiz_result_id, details_json):
+        # Store answers JSON directly
         detail = QuizResultDetail(
             quiz_result_id=quiz_result_id,
-            details=details_json  # Save the JSON data directly
+            details=details_json  # JSON field containing word_id and is_correct for each answer
         )
         db.session.add(detail)
         db.session.commit()
@@ -184,3 +193,9 @@ class QuizResultDetailRepository:
     @staticmethod
     def get_details_by_quiz_id(quiz_id):
         return QuizResultDetail.query.filter_by(quiz_result_id=quiz_id).all()
+
+    @staticmethod
+    def get_quiz_details_by_quiz_id(quiz_id):
+        return QuizResultDetail.query.filter_by(quiz_result_id=quiz_id).first()
+
+

@@ -73,14 +73,25 @@ class WordsService:
         words = WordsRepository.get_words_by_category(category_id)
         native_column = WordsService.get_language_column_name(native_language_id)
         foreign_column = WordsService.get_language_column_name(foreign_language_id)
+
         questions = []
         for word in words:
             correct_answer = getattr(word, native_column)
             question_text = getattr(word, foreign_column)
+
+            # Get a list of random options and add the correct answer
             options = WordsRepository.get_random_words_for_options(category_id, native_column, correct_answer)
             options.append(correct_answer)
-            random.shuffle(options)
-            questions.append({'question': question_text, 'correct_answer': correct_answer, 'options': options})
+            random.shuffle(options)  # Shuffle options to randomize the position of the correct answer
+
+            # Include word.id for reference in the frontend
+            questions.append({
+                'id': word.id,  # This is the actual word_id
+                'question': question_text,
+                'correct_answer': correct_answer,
+                'options': options
+            })
+
         return questions
 
     @staticmethod
@@ -103,19 +114,23 @@ class CategoriesService:
 
 class QuizService:
     @staticmethod
-    def record_quiz_result(user_id, language_id, category_id, score, question_details):
-        # Add the main quiz result
+    def save_quiz_result(user_id, language_id, category_id, score, result_details):
+        # Save the main quiz result
         quiz_result = QuizResultRepository.add_quiz_result(user_id, language_id, category_id, score)
 
-        # Add each question detail in the result details
-        for detail in question_details:
-            QuizResultDetailRepository.add_quiz_result_detail(
-                quiz_result_id=quiz_result.id,
-                word_id=detail['word_id'],
-                is_correct=detail['is_correct']  # Use 'is_correct' as per the updated method
-            )
+        # Prepare JSON structure with word_id and is_correct for each answer
+        details_json = [
+            {"word_id": detail["word_id"], "is_correct": detail["is_correct"]}
+            for detail in result_details
+        ]
 
-        return {"message": "Quiz result recorded successfully"}
+        # Store this JSON in the QuizResultDetailRepository
+        QuizResultDetailRepository.add_quiz_result_detail(
+            quiz_result_id=quiz_result.id,
+            details_json=details_json  # Store the JSON array directly
+        )
+
+        return {"message": "Quiz result saved successfully"}
 
     @staticmethod
     def get_quiz_questions(native_language_id, foreign_language_id, category_id):
@@ -126,7 +141,11 @@ class QuizService:
         for word in words:
             correct_answer = getattr(word, native_column, "[No Translation]")
             question = getattr(word, foreign_column, "[No Translation]")
-            questions.append({'question': question, 'correct_answer': correct_answer})
+            questions.append({
+                'word_id': word.id,
+                'question': question,
+                'correct_answer': correct_answer
+            })
         return questions
 
 

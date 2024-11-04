@@ -7,7 +7,8 @@ from flask_migrate import Migrate
 from models import db, User, TokenBlocklist, Language, Category, Word, UserProgress, QuizResult
 from services import AuthService, ProfileService, LanguagesService, WordsService, CategoriesService, QuizService, \
     UserProgressService, UserKnownWordsService, QuizResultsService, QuizResultsDetailService
-from repositories import UserRepository, TokenBlocklistRepository, QuizResultRepository
+from repositories import UserRepository, TokenBlocklistRepository, QuizResultRepository, QuizResultDetailRepository, \
+    WordsRepository
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": f"http://{os.getenv('KETTO_FE', default='localhost')}:5173"}}, supports_credentials=True, expose_headers="Authorization")
@@ -180,14 +181,35 @@ def get_user_quizzes():
 
 
 # Get quiz details by quiz id
-@app.route('/api/quiz-details/<int:quiz_id>', methods=['GET'], endpoint="get_quiz_details")
+@app.route('/api/quiz-details/<int:quiz_id>', methods=['GET'])
 @jwt_required()
 def get_quiz_details(quiz_id):
-    details = QuizResultsDetailService.get_quiz_details(quiz_id)
-    return jsonify([{
-        "word": detail.word,
-        "is_correct": detail.is_correct
-    } for detail in details]), 200
+    quiz_result = QuizResultRepository.get_quiz_result_by_id(quiz_id)
+    if quiz_result is None:
+        return jsonify({"error": "No quiz result found for this quiz"}), 404
+
+    quiz_details = QuizResultDetailRepository.get_quiz_details_by_quiz_id(quiz_id)
+    if quiz_details is None:
+        return jsonify({"error": "No details found for this quiz"}), 404
+
+    language_id = quiz_result.language_id
+    language_column = WordsRepository.get_language_column_name(language_id)
+    if not language_column:
+        return jsonify({"error": "Invalid language ID"}), 400
+
+    # Parse the JSON to get the word_id and correctness
+    detailed_results = []
+    for detail in quiz_details.details:
+        word = WordsRepository.get_word_by_id(detail['word_id'])
+        if word:
+            detailed_results.append({
+                "word_id": word.id,
+                "category_id": word.category_id,
+                "word": getattr(word, language_column),
+                "is_correct": detail['is_correct']
+            })
+
+    return jsonify(detailed_results), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
