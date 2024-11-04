@@ -10,7 +10,8 @@ function QuizPage() {
   const [isQuizComplete, setIsQuizComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [questionDetails, setQuestionDetails] = useState([]); // Stores details for each question
+  const [answers, setAnswers] = useState([]); // Temporary storage for answers
+  const [counter, setCounter] = useState(1); // Counter for id placeholder
 
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
@@ -49,39 +50,40 @@ function QuizPage() {
   };
 
   const handleNextQuestion = () => {
-    // Check if the answer is correct
     const isCorrect = selectedOption === currentQuestion.correct_answer;
+
+    // Store both word_id and is_correct for each answer
+    setAnswers(prevAnswers => [
+      ...prevAnswers,
+      { word_id: counter, is_correct: isCorrect }
+    ]);
+
+    // Update score if the answer is correct
     if (isCorrect) {
       setScore(score + 1);
     }
 
-    // Record the question detail for each question, including word_id
-    setQuestionDetails(prevDetails => [
-      ...prevDetails,
-      { word_id: currentQuestion.id, is_correct: isCorrect }, // Ensuring each entry has `word_id` and `is_correct`
-    ]);
-
     setSelectedOption(null);
 
-    // Move to the next question or mark the quiz as complete
     if (currentQuestionIndex + 1 < questions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      setIsQuizComplete(true);
-      submitQuizResults(); // Submit quiz results when the quiz is complete
+      setIsQuizComplete(true); // Mark quiz as complete
     }
+
+    // Increment the counter
+    setCounter(counter + 1);
   };
 
   const submitQuizResults = () => {
     const token = localStorage.getItem('jwtToken');
     const percentageScore = (score / questions.length) * 100;
 
-    // Prepare payload for the quiz results
     const payload = {
       language_id: nativeLanguageId,
       category_id: categoryId,
       score: percentageScore,
-      result_details: questionDetails,
+      result_details: answers, // Use the final answers array
     };
 
     fetch('http://localhost:5000/api/quiz_result', {
@@ -106,7 +108,12 @@ function QuizPage() {
       });
   };
 
-  // Memoize options for the current question to avoid recalculating on each render
+  useEffect(() => {
+    if (isQuizComplete) {
+      submitQuizResults();
+    }
+  }, [isQuizComplete]);
+
   const options = useMemo(() => {
     if (!currentQuestion) return [];
 
