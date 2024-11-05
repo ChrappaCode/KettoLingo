@@ -165,10 +165,15 @@ def get_quiz_questions(foreign_language_id, category_id):
 
 
 # Get user progress
-@app.route('/api/user_progress/<int:user_id>', methods=['GET'])
+@app.route('/api/user_progress', methods=['GET'])
 @jwt_required()
-def get_user_progress(user_id):
-    progress = UserProgressService.get_user_progress(user_id)
+def get_user_progress():
+    current_user = get_jwt_identity()
+    user = UserRepository.get_user_by_email(current_user['email'])
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    progress = UserProgressService.get_user_progress(user.id)
     return jsonify(progress), 200
 
 

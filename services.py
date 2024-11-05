@@ -5,6 +5,7 @@ from repositories import UserRepository, TokenBlocklistRepository, LanguagesRepo
     CategoriesRepository, UserProgressRepository, UserKnownWordRepository, QuizResultRepository, \
     QuizResultDetailRepository
 import logging
+import json
 
 bcrypt = Bcrypt()
 
@@ -174,16 +175,27 @@ class QuizService:
 class UserProgressService:
     @staticmethod
     def get_user_progress(user_id):
-        # Fetch all progress entries for the user
-        user_progress = UserProgressRepository.get_all_user_progress(user_id)
-        return [
-            {
-                'category_id': progress.category_id,
-                'learned_words': progress.learned_words,
-                'quiz_score': progress.quiz_score
-            }
-            for progress in user_progress
-        ]
+        progress = {}
+        languages = LanguagesService.get_all_languages()
+
+        for language in languages:
+            categories = CategoriesService.get_all_categories()
+            language_progress = {}
+
+            for category in categories:
+                quizzes = QuizResultRepository.get_quizzes_by_user_category_and_language(user_id, category['id'],
+                                                                                         language['id'])
+                if quizzes:
+                    best_quiz = max(quizzes, key=lambda quiz: quiz.score)
+                    details = QuizResultDetailRepository.get_details_by_quiz_id(best_quiz.id)
+                    details_json = [item for detail in details for item in detail.details]
+                    correct_answers = sum(detail['is_correct'] for detail in details_json)
+                    total_questions = len(details_json)
+                    language_progress[category['name']] = f"{correct_answers}/{total_questions}"
+
+            progress[language['name']] = language_progress
+
+        return progress
 
     @staticmethod
     def update_user_progress(user_id, category_id, learned_words, quiz_score):
