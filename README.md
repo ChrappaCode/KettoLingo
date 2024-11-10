@@ -10,7 +10,8 @@ A brief overview of the project:
 1. [Installation](#installation)
 2. [Usage](#usage)
 3. [Features](#features)
-4. [Contributing](#contributing)
+  - [Languages](#prerequisites)
+5. [Contributing](#contributing)
 
 ## Installation
 Step-by-step instructions to set up the project locally:
@@ -25,5 +26,7 @@ npm install # or the equivalent command for your project
 ## Usage
 
 ## Features
+
+### Languages
 
 ## Contributing
