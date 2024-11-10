@@ -2,9 +2,8 @@
 
 ## Popis
 Krátky prehľad projektu:
-- Čo projekt robí?
-- Aký problém rieši?
-- Pre koho je určený?
+- Náš projekt je určený na výučbu cudzích jazykov. Obshahuje viacero možných výučbových aktivít pre prihláseného používateľa a zároveň široký rozsah nových cudzích slov a kvízov.
+- Aplikácia je určená pre každého, kto má chuť sa vzdelávať v oblasti cudzích jazykov. Môže ísť o študentov ale aj už dospelých ľudí.
 
 ## Obsah
 1. [Inštalácia](#inštalácia)
