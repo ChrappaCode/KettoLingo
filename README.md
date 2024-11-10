@@ -1,4 +1,4 @@
-# KettoLingo
+# KettőLingo
 
 ## Popis
 Krátky prehľad projektu:
