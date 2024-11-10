@@ -13,7 +13,7 @@ Krátky prehľad projektu:
 4. [Autori](#autori)
 
 ## Inštalácia
-Krok za krokom, ako nastaviť projekt lokálne:
+Krok za krokom, ako nastaviť projekt KettőLingo lokálne:
 
 ```bash
 # Príkazy
