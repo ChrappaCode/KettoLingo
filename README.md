@@ -16,13 +16,16 @@ Krátky prehľad projektu:
 ## Inštalácia
 Krok za krokom, ako nastaviť projekt lokálne:
 
+```bash
+# Príkazy
+git clone https://github.com/ChrappaCode/KettoLingo.git
+```
+
 - Prvým krokom je nainštalovanie všetkých potrebných knižníc:
 
 ```bash
 # Príkazy
-git clone https://github.com/vasemeno/ketto-lingo.git
-cd ketto-lingo
-npm install # alebo ekvivalentný príkaz pre váš projekt
+
 ```
 
 ## Použitie
