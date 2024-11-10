@@ -9,11 +9,8 @@ A brief overview of the project:
 ## Table of Contents
 1. [Installation](#installation)
 2. [Usage](#usage)
-3. [Configuration](#configuration)
-4. [Features](#features)
-5. [Documentation](#documentation)
-6. [Contributing](#contributing)
-7. [License](#license)
+3. [Features](#features)
+4. [Contributing](#contributing)
 
 ## Installation
 Step-by-step instructions to set up the project locally:
@@ -23,3 +20,10 @@ Step-by-step instructions to set up the project locally:
 git clone https://github.com/yourusername/project-name.git
 cd project-name
 npm install # or the equivalent command for your project
+```
+
+## Usage
+
+## Features
+
+## Contributing
