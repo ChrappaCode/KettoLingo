@@ -20,7 +20,7 @@ Krok za krokom, ako nastaviť projekt KettőLingo lokálne:
 git clone https://github.com/ChrappaCode/KettoLingo.git
 ```
 
-- Prvým krokom je nainštalovanie všetkých potrebných knižníc:
+- Prvým krokom je inštalácia všetkých potrebných knižníc:
 
 ```bash
 # Príkazy
