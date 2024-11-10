@@ -1,32 +1,34 @@
 # KettoLingo
 
-## Description
-A brief overview of the project:
-- What does it do?
-- What problem does it solve?
-- Who is it for?
+## Popis
+Krátky prehľad projektu:
+- Čo projekt robí?
+- Aký problém rieši?
+- Pre koho je určený?
 
-## Table of Contents
-1. [Installation](#installation)
-2. [Usage](#usage)
-3. [Features](#features)
-  - [Languages](#languages)
-4. [Contributing](#contributing)
+## Obsah
+1. [Inštalácia](#inštalácia)
+2. [Použitie](#použitie)
+3. [Funkcie](#funkcie)
+   - [Jazyky](#jazyky)
+4. [Autori](#autori)
 
-## Installation
-Step-by-step instructions to set up the project locally:
+## Inštalácia
+Krok za krokom, ako nastaviť projekt lokálne:
+
+- Prvým krokom je nainštalovanie všetkých potrebných knižníc:
 
 ```bash
-# Example commands
-git clone https://github.com/yourusername/project-name.git
-cd project-name
-npm install # or the equivalent command for your project
+# Príkazy
+git clone https://github.com/vasemeno/ketto-lingo.git
+cd ketto-lingo
+npm install # alebo ekvivalentný príkaz pre váš projekt
 ```
 
-## Usage
+## Použitie
 
-## Features
+## Funkcie
 
-### Languages
+### Jazyky
 
-## Contributing
+## Autori
