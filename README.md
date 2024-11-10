@@ -2,7 +2,7 @@
 
 ## Popis
 Krátky prehľad projektu:
-- Náš projekt je určený na výučbu cudzích jazykov. Obshahuje viacero možných výučbových aktivít pre prihláseného používateľa a zároveň široký rozsah cudzích slov a kvízov.
+- Náš projekt KettőLingo je určený na výučbu cudzích jazykov. Obshahuje viacero možných výučbových aktivít pre prihláseného používateľa a zároveň široký rozsah cudzích slov a kvízov.
 - Aplikácia je určená pre každého, kto má chuť sa vzdelávať v oblasti cudzích jazykov. Môže ísť o študentov ale aj dospelých ľudí, na svoje si tu príde každý!
 
 ## Obsah
