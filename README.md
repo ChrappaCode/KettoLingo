@@ -10,8 +10,8 @@ A brief overview of the project:
 1. [Installation](#installation)
 2. [Usage](#usage)
 3. [Features](#features)
-  - [Languages](#prerequisites)
-5. [Contributing](#contributing)
+  - [Languages](#languages)
+4. [Contributing](#contributing)
 
 ## Installation
 Step-by-step instructions to set up the project locally:
