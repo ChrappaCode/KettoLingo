@@ -166,15 +166,6 @@
   background: linear-gradient(to right, #478ae5, #162f50); /* Slightly darker gradient */
 }
 
-/* Disabled button styling */
-.language-button,
-.category-button,
-.quiz-button:disabled {
-  cursor: not-allowed; /* Indicate disabled state */
-  background: #e0e0e0; /* Gray background */
-  color: #a0a0a0; /* Dimmed text color */
-  box-shadow: none; /* No shadow for disabled buttons */
-}
 
 .language-button,
 .category-button,
