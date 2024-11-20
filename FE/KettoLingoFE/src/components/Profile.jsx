@@ -260,7 +260,7 @@ function Profile() {
           )}
 
           <div>
-            <h3>Select a Language</h3>
+            <h3 className={styles.selectLanguage}>Select a Language</h3>
             {languages.map(language => (
               <button
                 key={language.id}
@@ -273,7 +273,7 @@ function Profile() {
 
             {selectedLanguage && (
               <div>
-                <h4>Categories</h4>
+                <h4 className={styles.selectLanguage}>Categories</h4>
                 {categories.map(category => (
                   <button
                     key={category.id}
@@ -288,7 +288,7 @@ function Profile() {
 
             {selectedCategory && (
               <div>
-                <h4>Quizzes Taken</h4>
+                <h4 className={styles.selectLanguage}>Quizzes Taken</h4>
                 {quizzes.map(quiz => (
                   <button
                     key={quiz.id}
@@ -302,16 +302,26 @@ function Profile() {
             )}
 
             {quizDetails.length > 0 && (
-              <div>
-                <h4>Quiz Details</h4>
-                {quizDetails.map((detail, index) => (
-                  <div key={index}>
-                    <p>Word: {detail.word}</p>
-                    <p>Correct: {detail.is_correct}</p>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div>
+              <h4 className={styles.selectLanguage}>Quiz Details</h4>
+              <table className={styles.quizDetailsTable}>
+                <thead>
+                  <tr>
+                    <th>Word</th>
+                    <th>Correct</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {quizDetails.map((detail, index) => (
+                    <tr key={index}>
+                      <td>{detail.word}</td>
+                      <td>{detail.is_correct}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
           </div>
         </div>
       </div>

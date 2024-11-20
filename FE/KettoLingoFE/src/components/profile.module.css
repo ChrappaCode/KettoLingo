@@ -105,3 +105,143 @@
 .closeBtn:hover {
   opacity: 0.8;
 }
+
+.profile-select {
+  padding: 15px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  appearance: none; /* For consistent styling across browsers */
+}
+
+.profile-select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* General header styling */
+.selectLanguage {
+  margin-top: 15px;
+  color: #478ae5; /* Matches the gradient of the .profile-heading */
+  font-family: 'Arial', sans-serif; /* Use a consistent font */
+  font-weight: 700; /* Same font weight for emphasis */
+  margin-bottom: 15px; /* Consistent spacing */
+  text-align: center; /* Center align all headers */
+}
+
+/* Special styling for gradient effect on the main heading */
+.selectLanguage.profile-heading {
+  background: linear-gradient(to bottom, #478ae5, #162f50);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-size: 2.2rem; /* Keep it bold for main heading */
+}
+
+/* General button styling */
+.language-button,
+.category-button,
+.quiz-button {
+  padding: 12px 20px; /* Comfortable padding */
+  font-size: 1rem; /* Consistent font size */
+  font-weight: 600; /* Slightly bold text */
+  border: none; /* Remove default button borders */
+  border-radius: 20px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  background: linear-gradient(to right, #96c3f8, #17465e); /* Matching gradient */
+  color: #ffffff; /* Text color */
+  text-transform: capitalize; /* Optional: capitalize text */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth animations */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+/* Button hover effect */
+.language-button,
+.category-button,
+.quiz-button:hover {
+  transform: translateY(-2px); /* Lift slightly on hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+  background: linear-gradient(to right, #478ae5, #162f50); /* Slightly darker gradient */
+}
+
+/* Disabled button styling */
+.language-button,
+.category-button,
+.quiz-button:disabled {
+  cursor: not-allowed; /* Indicate disabled state */
+  background: #e0e0e0; /* Gray background */
+  color: #a0a0a0; /* Dimmed text color */
+  box-shadow: none; /* No shadow for disabled buttons */
+}
+
+.language-button,
+.category-button,
+.quiz-button {
+  padding: 8px 12px; /* Smaller padding */
+  font-size: 0.9rem; /* Smaller font size */
+  margin: 5px; /* Reduced spacing between buttons */
+  width: auto; /* No full-width buttons */
+  border-radius: 10px; /* Rounded corners */
+  background: linear-gradient(to right, #96c3f8, #17465e); /* Consistent style */
+  color: #ffffff;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.language-button:hover,
+.category-button:hover,
+.quiz-button:hover {
+  transform: translateY(-1px); /* Slight hover lift */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+}
+
+.grid-container {
+  display: grid; /* Use grid layout */
+  gap: 10px; /* Space between grid items */
+}
+
+.language-grid {
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Dynamic grid for languages */
+}
+
+.category-grid {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Dynamic grid for categories */
+}
+
+.quiz-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Dynamic grid for quizzes */
+}
+
+.quizDetailsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.quizDetailsTable th, .quizDetailsTable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.quizDetailsTable th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  color: #162f50;
+}
+
+.quizDetailsTable tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.quizDetailsTable tr:hover {
+  background-color: #eaf6ff;
+}
+
+.quizDetailsTable td {
+  font-size: 0.9rem;
+  color: #333;
+}
+
