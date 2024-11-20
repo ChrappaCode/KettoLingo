@@ -274,3 +274,8 @@
   }
 }
 
+@media (max-width: 440px) {
+  .leftSection h1 {
+    font-size: 2rem;
+  }
+}

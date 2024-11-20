@@ -5,6 +5,7 @@
   padding: 10px 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background: linear-gradient(to right, #96c3f8, #17465e);
+  width: 100%;
 }
 
 .logo {
@@ -55,4 +56,74 @@
 
 .navLink:hover {
    text-shadow: 0 2px 5px rgb(255, 255, 255,0.4);
+}
+
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.hamburger .line {
+  width: 25px;
+  height: 3px;
+  background-color: #96c3f8;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+
+.mobileMenu {
+  position: absolute;
+  top: 51px;
+  right: 0;
+  background: linear-gradient(to right, rgba(150, 195, 248, 0.7), rgba(23, 70, 94, 0.7));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.mobileMenu .navLink,
+.mobileMenu .logoutButton {
+  display: block;
+  width: 100%;
+  padding: 10px 0;
+  margin: 5px 0;
+  text-align: left;
+  font-size: 18px;
+  color: rgba(23, 70, 94);
+font-weight: bold;
+  text-decoration: none;
+}
+.mobileMenu .navLink{
+  font-size: 20px
+}
+
+.mobileMenu .logoutButton {
+  background: rgba(150, 195, 248, 0);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.mobileMenu .logoutButton:hover {
+  text-shadow: 0 2px 5px rgb(255, 255, 255,0.4);
+  transform: translateY(0px);
+}
+
+
+@media (max-width: 470px) {
+  .navLinks {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
 }
