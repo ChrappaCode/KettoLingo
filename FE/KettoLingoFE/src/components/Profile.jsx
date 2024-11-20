@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from "./profile.module.css";
 import Header from "./Header.jsx";
 
@@ -16,6 +16,7 @@ function Profile() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [newLanguageId, setNewLanguageId] = useState('NoChangePlaceholder');
   const [displayedLanguage, setDisplayedLanguage] = useState('');
+  const [showUpdateModal, setShowUpdateModal] = useState(false); // Modal visibility state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,7 +75,7 @@ function Profile() {
     if (newLanguageId !== 'NoChangePlaceholder' && formData.native_language_id !== newLanguageId) {
       setShowConfirmation(true);
     } else {
-      await updateProfile();
+      setShowUpdateModal(true); // Show the modal to confirm the update
     }
   };
 
@@ -133,6 +134,15 @@ function Profile() {
     setShowConfirmation(false);
     setNewLanguageId('NoChangePlaceholder');
     setDisplayedLanguage(languages.find(lang => lang.id === formData.native_language_id)?.name || '');
+  };
+
+  const handleCloseModal = () => {
+    setShowUpdateModal(false); // Close the modal
+  };
+
+  const handleConfirmModal = () => {
+    updateProfile(); // Proceed with the profile update
+    setShowUpdateModal(false); // Close the modal after confirmation
   };
 
   const fetchCategories = (languageId) => {
@@ -251,6 +261,19 @@ function Profile() {
             <button type="submit" className={styles["profile-button"]}>Update Profile</button>
           </form>
 
+          {/* Update Profile Modal */}
+          {showUpdateModal && (
+            <div className={styles.modal}>
+              <div className={styles.modalContent}>
+                <h3>Confirm Update</h3>
+                <p>Are you sure you want to update native language? It will lead to deleting all your quizes!</p>
+                <button onClick={handleConfirmModal}>Yes</button>
+                <button onClick={handleCloseModal}>No</button>
+              </div>
+            </div>
+          )}
+
+          {/* Language Change Confirmation */}
           {showConfirmation && (
             <div className={styles.confirmationDialog}>
               <p>If you change your native language, the history of your quizzes will be deleted permanently. Are you sure you want to change your native language?</p>
@@ -259,6 +282,7 @@ function Profile() {
             </div>
           )}
 
+          {/* Language Selection */}
           <div>
             <h3 className={styles.selectLanguage}>Select a Language</h3>
             {languages.map(language => (
@@ -270,38 +294,42 @@ function Profile() {
                 {language.name}
               </button>
             ))}
+          </div>
 
-            {selectedLanguage && (
-              <div>
-                <h4 className={styles.selectLanguage}>Categories</h4>
-                {categories.map(category => (
-                  <button
-                    key={category.id}
-                    onClick={() => fetchQuizzes(category.id)}
-                    className={styles["category-button"]}
-                  >
-                    {category.name}
-                  </button>
-                ))}
-              </div>
-            )}
+          {/* Categories */}
+          {selectedLanguage && (
+            <div>
+              <h4 className={styles.selectLanguage}>Categories</h4>
+              {categories.map(category => (
+                <button
+                  key={category.id}
+                  onClick={() => fetchQuizzes(category.id)}
+                  className={styles["category-button"]}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          )}
 
-            {selectedCategory && (
-              <div>
-                <h4 className={styles.selectLanguage}>Quizzes Taken</h4>
-                {quizzes.map(quiz => (
-                  <button
-                    key={quiz.id}
-                    onClick={() => fetchQuizDetails(quiz.id)}
-                    className={styles["quiz-button"]}
-                  >
-                    {quiz.date} - Score: {quiz.score}
-                  </button>
-                ))}
-              </div>
-            )}
+          {/* Quizzes */}
+          {selectedCategory && (
+            <div>
+              <h4 className={styles.selectLanguage}>Quizzes Taken</h4>
+              {quizzes.map(quiz => (
+                <button
+                  key={quiz.id}
+                  onClick={() => fetchQuizDetails(quiz.id)}
+                  className={styles["quiz-button"]}
+                >
+                  {quiz.date} - Score: {quiz.score} %
+                </button>
+              ))}
+            </div>
+          )}
 
-            {quizDetails.length > 0 && (
+          {/* Quiz Details Table */}
+          {quizDetails.length > 0 && (
             <div>
               <h4 className={styles.selectLanguage}>Quiz Details</h4>
               <table className={styles.quizDetailsTable}>
@@ -322,7 +350,6 @@ function Profile() {
               </table>
             </div>
           )}
-          </div>
         </div>
       </div>
     </div>
