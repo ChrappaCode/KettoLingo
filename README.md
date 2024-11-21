@@ -20,12 +20,31 @@ Krok za krokom, ako nastaviť projekt KettőLingo lokálne:
 git clone https://github.com/ChrappaCode/KettoLingo.git
 ```
 
-- Prvým krokom je inštalácia všetkých potrebných knižníc:
+- Prvým krokom je inštalácia všetkých potrebných knižníc a import DB:
+  
+```bash
+# Príkazy
+python import_categories.py
+python import_languages.py
+python import_csv.py
+flask db upgrade                         
+```
+
+- Následne je potrebné spustiť front-end, v podpriečinku KettoLingoFE:
 
 ```bash
 # Príkazy
-
+npm run dev
 ```
+
+- Následne môžme spustiť back-end:
+
+```bash
+# Príkazy
+python app.py 
+```
+
+Aplikácia bude bežať na http://localhost:5173/
 
 ## Použitie
 
