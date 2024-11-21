@@ -47,9 +47,14 @@ python app.py
 Aplikácia bude bežať na http://localhost:5173/
 
 ## Použitie
+Po spustení aplikácie je potrebné vytvoriť použivateľský účet a následne sa do neho prihlásiť. Príhlásený používateľ si na svojom profile zvolí rodnú reč a následne sú mu sprístupnené všetky funckie našej aplikácie.
 
 ## Funkcie
-
-### Jazyky
+Výuka cudzích slov zo širokej škály kategórií a podporovaných jazykov, ktorými sú Maďarčina, Slovenčina, Čeština, Taliančina a Angličtina. Ďalej po preštudovaní danej kategórie si používateľ vyplniť test dosiahnutých znalostí z danej kategórie. Test mu po ukončení ukáže jeho úspešnosť a uloží sa do jeho profilu. Používateľ v profile nájde všetky testy, ktoré vyplnil aj s podrobným detailom chýb.
 
 ## Autori
+- Bc. Boglárka Farkas
+- Bc. Miloš Ilovský
+- Bc. Dávid Kurek
+- Bc. Marek Mikula
+- Bc. Jakub Chrappa
