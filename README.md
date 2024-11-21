@@ -9,7 +9,6 @@ Krátky prehľad projektu:
 1. [Inštalácia](#inštalácia)
 2. [Použitie](#použitie)
 3. [Funkcie](#funkcie)
-   - [Jazyky](#jazyky)
 4. [Autori](#autori)
 
 ## Inštalácia
