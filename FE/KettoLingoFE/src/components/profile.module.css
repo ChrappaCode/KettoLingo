@@ -310,5 +310,35 @@
   padding: 10px;
 }
 
+/* Language and Category Selection Styles */
 
+
+/* Radio Group Container */
+.radioGroup {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 buttons per row */
+  justify-items: center; /* Center the buttons horizontally */
+  gap: 10px; /* Space between the buttons */
+  margin-bottom: 20px;
+  grid-auto-rows: min-content; /* Ensure each row fits its content */
+}
+
+
+/* Category and Language Labels */
+.categoryLabel, .languageLabel {
+  padding: 10px;
+  background: linear-gradient(to right, #96c3f8, #17465e); /* Matching gradient */
+  font-size: 1.1rem;
+  color: #fff;
+  border-radius: 20px; /* Same as the profile button */
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth animations */
+  margin: 0; /* Remove extra margin */
+}
+
+/* Custom Radio Button Styling */
+.customRadio {
+  margin: 3px;
+}
 

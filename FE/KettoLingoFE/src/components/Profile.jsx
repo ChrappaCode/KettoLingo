@@ -19,6 +19,7 @@ function Profile() {
   const [showUpdateModal, setShowUpdateModal] = useState(false); // Modal visibility state
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
     if (!token) {
@@ -285,32 +286,52 @@ function Profile() {
           {/* Language Selection */}
           <div>
             <h3 className={styles.selectLanguage}>Select a Language</h3>
-            {languages.map(language => (
-              <button
-                key={language.id}
-                onClick={() => fetchCategories(language.id)}
-                className={styles["language-button"]}
-              >
-                {language.name}
-              </button>
-            ))}
+            <div className={styles.radioGroup}>
+              {languages.map(language => (
+                <label key={language.id} className={styles.languageLabel}>
+                  <input
+                    type="radio"
+                    name="languages"
+                    value={language.id}
+                    checked={selectedLanguage === language.id}
+                    onChange={() => {
+                      fetchCategories(language.id); // Fetch categories for the selected language
+                      setSelectedCategory(null); // Reset selected category
+                    }}
+                    className={styles.languageRadio}
+                  />
+                  <span className={styles.customRadio}></span>
+                  {language.name}
+                </label>
+              ))}
+            </div>
           </div>
 
           {/* Categories */}
           {selectedLanguage && (
-            <div>
+            <div className={styles.categoriesContainer}>
               <h4 className={styles.selectLanguage}>Categories</h4>
-              {categories.map(category => (
-                <button
-                  key={category.id}
-                  onClick={() => fetchQuizzes(category.id)}
-                  className={styles["category-button"]}
-                >
-                  {category.name}
-                </button>
-              ))}
+              <div className={styles.radioGroup}>
+                {categories.map(category => (
+                  <label key={category.id} className={styles.categoryLabel}>
+                    <input
+                      type="radio"
+                      name="categories"
+                      value={category.id}
+                      checked={selectedCategory === category.id}
+                      onChange={() => fetchQuizzes(category.id)}
+                      className={styles.categoryRadio}
+                    />
+                    <span className={styles.customRadio}></span>
+                    {category.name}
+                  </label>
+                ))}
+              </div>
             </div>
           )}
+
+
+
 
           {/* Quizzes */}
           {selectedCategory && (
