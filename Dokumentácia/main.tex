@@ -1,0 +1,502 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{lightgray}{gray}{0.95}
+\definecolor{darkblue}{rgb}{0,0,0.6}
+\definecolor{darkred}{rgb}{0.6,0,0}
+
+\lstset{
+    basicstyle=\ttfamily,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    tabsize=4,
+    captionpos=b
+}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{KettoLingo}
+\author{Jakub Chrappa, Dávid Kurek, Boglárka Farkas, Marek Mikula, Miloš Ilovský}
+
+\begin{document}
+\maketitle
+
+\newpage
+\tableofcontents
+
+\newpage
+\section{Úvod}
+
+Projekt \textbf{Kett\textbf{ő}Lingo} je interaktívna aplikácia určená na efektívnu výučbu cudzích jazykov. Cieľom aplikácie je poskytovať používateľom rôzne výučbové aktivity, ktoré sú navrhnuté tak, aby im pomohli zlepšiť ich jazykové zručnosti a rozšíriť slovnú zásobu v cudzích jazykoch. Aplikácia ponúka bohatý obsah vrátane rôznych jazykových kategórií, kvízov a rôznych metód učenia, ktoré sa prispôsobujú potrebám a úrovniám používateľov.
+
+Kett\textbf{ő}Lingo je navrhnutý tak, aby bol vhodný pre širokú škálu používateľov. Môže slúžiť ako nástroj pre študentov, ktorí sa pripravujú na jazykové skúšky, ale aj pre dospelých, ktorí sa chcú zdokonaliť v cudzích jazykoch. Aplikácia podporuje učenie sa cez rôzne metódy, ako sú kvízy, testy, a sledovanie pokroku, čo umožňuje každému používateľovi prispôsobiť si štúdium podľa svojich individuálnych potrieb. 
+
+Nezáleží na tom, či je používateľ začiatočník alebo pokročilý, Kett\textbf{ő}Lingo ponúka nástroje, ktoré zaručujú efektívne učenie a zábavu v jednom. Tento projekt sa zameriava na podporu výučby jazykov prostredníctvom moderných technológii, ktoré uľahčujú proces učenia a motivujú používateľov k dosahovaniu svojich jazykových cieľov.
+
+
+
+
+
+
+
+\newpage
+\section{Funkcie}
+
+\subsection{Široká ponuka jazykov a kategórií}
+
+Aplikácia podporuje výuku cudzích slov v piatich jazykoch:
+
+- Maďarčina
+
+- Slovenčina
+
+- Čeština
+
+- Taliančina
+
+- Angličtina
+
+Slová sú rozdelené do rôznych tematických kategórií, ako napríklad cestovanie, jedlo, povolania, príroda a ďalšie.
+
+\subsection{Interaktívna výuka}
+
+Používatelia si môžu prezerať, opakovať a zapamätať slová pomocou vizuálnych alebo textových pomôcok.
+
+Funkcie na zvýšenie efektivity učenia, napríklad:
+
+- Flashcards na zapamätanie slov
+
+- Kvíz
+
+
+\subsection{Testovanie znalostí}
+
+Po ukončení štúdia kategórie môžu používatelia absolvovať test, ktorý overí ich nadobudnuté znalosti.
+
+Testy sú prispôsobené na mieru konkrétnej kategórii a jazyku.
+
+\subsection{Vyhodnotenie testov}
+
+Po dokončení testu aplikácia okamžite zobrazí výsledky:
+
+- Celková úspešnosť (percentuálne skóre).
+
+- Počet správnych a nesprávnych odpovedí.
+
+- Zoznam chýb spolu s vysvetlením správnych odpovedí.
+
+\subsection{Profil používateľa}
+
+Profil používateľa obsahuje viaceré zaujímavé informácie:
+
+- História testov: Každý test, ktorý používateľ absolvoval, sa uloží do jeho profilu.
+
+- Detailné výsledky: Používateľ má prístup k podrobným analýzam svojich predchádzajúcich testov, vrátane chybovosti a správnych odpovedí.
+
+- Sledovanie pokroku: Aplikácia umožňuje sledovať zlepšovanie sa v jednotlivých jazykoch a kategóriách na základe absolvovaných testov.
+
+\newpage
+\section{Front-End}
+Frontend aplikácie je implementovaný pomocou \textbf{React.js}, moderného JavaScriptového frameworku, ktorý umožňuje efektívne a modulárne budovanie užívateľského rozhrania. Na správu balíčkov a vývoj sa používa \textbf{Vite}, rýchly a moderný nástroj pre vývoj webových aplikácií.
+
+
+\subsection{Štruktúra Aplikácie}
+Hlavná štruktúra aplikácie je definovaná v súbore \texttt{App.jsx}, ktorý obsahuje definície trás pomocou \texttt{react-router-dom}. Tieto trasy zodpovedajú jednotlivým stránkam aplikácie.
+
+\subsubsection{Ukážka kódu pre \texttt{App.jsx}}
+\begin{lstlisting}[language=java, caption={Definícia trás v \texttt{App.jsx}}]
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Register from './components/Register.jsx';
+import Login from './components/Login.jsx';
+import Overview from './components/Overview.jsx';
+import Profile from "./components/Profile.jsx";
+import LearningPage from "./components/LearningPage.jsx";
+import QuizPage from "./components/QuizPage.jsx";
+
+function App() {
+  return (
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/overview" element={<Overview />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/learn/:foreignLanguageId/:categoryId" element={<LearningPage />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/quiz/:foreignLanguageId/:categoryId" element={<QuizPage />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+\end{lstlisting}
+
+\subsection{Konfigurácia Prostredia}
+Frontend aplikácia využíva \textbf{Vite} na vývoj a kompiláciu. Konfiguračný súbor \texttt{vite.config.js} definuje proxy na komunikáciu s backend serverom a pridáva podporu pre React.
+
+\subsubsection{Ukážka konfigurácie \texttt{vite.config.js}}
+\begin{lstlisting}[language=java, caption={Konfigurácia prostredia pomocou Vite}]
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: process.env.KETTO_BE || 'http://127.0.0.1:5000',  // Flask backend server
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),  // Optional rewrite rule
+      },
+    },
+  },
+  plugins: [react()],
+})
+\end{lstlisting}
+
+\subsection{Komponenty}
+Každá stránka aplikácie je implementovaná ako samostatný React komponent. Nižšie sú stručné popisy hlavných komponentov:
+
+\subsubsection{Register}
+Komponent \texttt{Register.jsx} poskytuje formulár na registráciu používateľa. Používa metódu \texttt{POST} na odoslanie údajov na server.
+
+\subsubsection{Login}
+Komponent \texttt{Login.jsx} obsahuje prihlasovací formulár a overuje údaje používateľa.
+
+\subsubsection{Overview}
+Komponent \texttt{Overview.jsx} slúži ako hlavná prehľadová stránka, kde používateľ vidí dostupné jazykové kategórie a možnosti výučby.
+
+\subsubsection{Profile}
+Komponent \texttt{Profile.jsx} zobrazuje údaje o používateľovi a umožňuje ich úpravu.
+
+\subsubsection{LearningPage}
+Komponent \texttt{LearningPage.jsx} zobrazuje slová na učenie na základe vybranej jazykovej kategórie.
+
+\subsubsection{QuizPage}
+Komponent \texttt{QuizPage.jsx} poskytuje otázky pre testovanie znalostí používateľa.
+
+\subsection{HTML Šablóna}
+Frontend aplikácia využíva základnú HTML šablónu definovanú v súbore \texttt{index.html}.
+
+\subsubsection{Ukážka HTML Šablóny}
+\begin{lstlisting}[language=html, caption={HTML Šablóna pre aplikáciu}]
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oi&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+\end{lstlisting}
+
+\subsubsection{Zhodnotenie}
+Táto frontend aplikácia je efektívne navrhnutá s použitím React.js a Vite, čo umožňuje rýchlu a flexibilnú vývojovú skúsenosť. Integrácia s backendom cez proxy server zjednodušuje komunikáciu medzi frontend a backend časťami aplikácie.
+
+
+\newpage
+\section{Back-End}
+
+Táto časť popisuje implementáciu backendu pre aplikáciu KettoLingo. Backend je postavený na Flask frameworku a poskytuje API pre správu používateľských údajov, jazykov, kategórií, testov a ich výsledkov.
+
+\subsection{Konfigurácia}
+\subsubsection{Prostredie}
+Backend využíva Flask a je nakonfigurovaný na PostgreSQL databázu:
+\begin{lstlisting}
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('KETTO_DB', 
+  default='postgresql://postgres:postgres@localhost/KettoLingo')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+\end{lstlisting}
+
+JWT autentifikácia je zabezpečená pomocou tajného kľúča:
+\begin{lstlisting}
+app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
+\end{lstlisting}
+
+\subsubsection{Rozšírenia}
+Použité rozšírenia:
+\begin{itemize}
+    \item \textbf{Flask-Bcrypt} pre hashovanie hesiel.
+    \item \textbf{Flask-JWT-Extended} pre správu JWT tokenov.
+    \item \textbf{Flask-CORS} pre podporu CORS požiadaviek.
+    \item \textbf{Flask-Migrate} pre migráciu databázy.
+\end{itemize}
+
+\subsection{API Endpoints}
+\subsubsection{Registrácia a prihlásenie}
+\begin{description}
+    \item[POST \texttt{/api/register}] Registrácia nového používateľa.
+    \item[POST \texttt{/api/login}] Prihlásenie používateľa, vracia \texttt{access\_token}.
+    \item[POST \texttt{/api/logout}] Odhlásenie aktuálneho používateľa, token je pridaný do zoznamu zablokovaných.
+\end{description}
+
+\subsubsection{Správa profilu}
+\begin{description}
+    \item[GET \texttt{/api/profile}] Získanie údajov o profile aktuálne prihláseného používateľa.
+    \item[PUT \texttt{/api/profile}] Aktualizácia používateľského profilu.
+\end{description}
+
+\subsubsection{Jazyky a kategórie}
+\begin{description}
+    \item[GET \texttt{/api/languages}] Získanie zoznamu podporovaných jazykov.
+    \item[GET \texttt{/api/languages\_dropdown}] Získanie jazykov okrem natívneho jazyka používateľa.
+    \item[GET \texttt{/api/categories}] Získanie zoznamu kategórií.
+\end{description}
+
+\subsubsection{Slová a učenie}
+\begin{description}
+    \item[GET \texttt{/api/learn/\textless{}foreign\_language\_id\textgreater{}/\textless{}category\_id\textgreater{}}] Získanie slov na učenie pre daný jazyk a kategóriu.
+\end{description}
+
+
+\subsubsection{Testy a výsledky}
+\begin{description}
+    \item[GET \texttt{/api/quiz/\textless{}foreign\_language\_id\textgreater{}/\textless{}category\_id\textgreater{}}] Získanie otázok na test pre daný jazyk a kategóriu.
+    \item[POST \texttt{/api/quiz\_result}] Uloženie výsledku testu spolu s detailmi.
+    \item[GET \texttt{/api/quizzes}] Získanie výsledkov testov pre používateľa, kategóriu a jazyk.
+    \item[GET \texttt{/api/quiz-details/\textless{}quiz\_id\textgreater{}}] Získanie detailov výsledku testu.
+\end{description}
+
+\subsubsection*{Progres a známe slová}
+\begin{description}
+    \item[GET \texttt{/api/user\_progress}] Získanie progresu používateľa.
+    \item[GET \texttt{/api/known\_words/\textless{}user\_id\textgreater{}/\textless{}category\_id\textgreater{}}] Získanie známych slov pre daného používateľa a kategóriu.
+\end{description}
+
+\subsection{Bezpečnosť}
+JWT tokeny sú kontrolované na blokovanie pomocou nasledovného mechanizmu:
+\begin{lstlisting}
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blocklist(jwt_header, jwt_payload):
+    jti = jwt_payload['jti']
+    return TokenBlocklistRepository.is_token_blacklisted(jti)
+\end{lstlisting}
+
+\subsection{Použité služby a repozitáre}
+Modulárna štruktúra backendu využíva služby a repozitáre na implementáciu logiky:
+\begin{itemize}
+    \item \textbf{Služby:} \texttt{AuthService}, \texttt{ProfileService}, \texttt{QuizService}, atď.
+    \item \textbf{Repozitáre:} \texttt{UserRepository}, \texttt{QuizResultRepository}, \texttt{WordsRepository}, atď.
+\end{itemize}
+
+\newpage
+\section{Databáza}
+
+\subsection{PostgreSQL}
+
+PostgreSQL je výkonný a otvorený relačný databázový systém (RDBMS), ktorý je známy svojou stabilitou, výkonnosťou a podporou pokročilých funkcií. Je vhodný pre aplikácie rôznych veľkostí, od malých projektov až po rozsiahle systémy s veľkým objemom dát.
+
+Medzi hlavné vlastnosti PostgreSQL patria:
+
+\begin{itemize}
+    \item \textbf{Podpora štandardu SQL}: PostgreSQL plne podporuje SQL a poskytuje množstvo rozšírení pre komplexnejšie operácie.
+    \item \textbf{Rozšíriteľnosť}: Používateľ môže pridávať vlastné typy dát, funkcie, operátory a indexy.
+    \item \textbf{Integrita dát}: PostgreSQL poskytuje transakcie na úrovni ACID (Atomicita, Konzistencia, Izolácia, Trvanlivosť), čo zaručuje bezpečné ukladanie a manipuláciu s dátami.
+    \item \textbf{Podpora pokročilých typov dát}: Databáza umožňuje prácu s JSON, XML, geografickými dátami (GIS) a ďalšími špeciálnymi typmi.
+    \item \textbf{Podpora cudzieho kľúča a vzťahov}: PostgreSQL efektívne spravuje vzťahy medzi tabuľkami prostredníctvom cudzích kľúčov.
+    \item \textbf{Otvorený zdrojový kód}: Komunita aktívne prispieva k rozvoju PostgreSQL, čo zaručuje pravidelné aktualizácie a širokú podporu.
+\end{itemize}
+
+V projekte KettoLingo slúži PostgreSQL ako hlavný databázový systém. Poskytuje robustnú platformu na uchovávanie a spracovanie údajov, vrátane používateľských účtov, jazykových kategórií, slov a pokroku používateľov. Vďaka svojej spoľahlivosti a výkonu je PostgreSQL ideálnou voľbou pre túto aplikáciu.
+
+\subsection{Implementácia DB}
+Databázová štruktúra aplikácie KettoLingo je navrhnutá na efektívne spravovanie dát súvisiacich s výučbou jazykov. Využíva PostgreSQL ako relačný databázový systém. Databáza obsahuje nasledujúce entity:
+
+\begin{itemize}
+    \item \textbf{User (users)}: Tabuľka uchováva informácie o používateľoch, vrátane jedinečného mena (\texttt{username}), e-mailovej adresy (\texttt{email}) a hesla (\texttt{password}).
+    \item \textbf{Category (categories)}: Tabuľka obsahuje kategórie slov, ako napríklad "základné slová" alebo "pokročilá slovná zásoba".
+    \item \textbf{Language (languages)}: Ukladá podporované jazyky ako angličtina, maďarčina, taliančina a ďalšie.
+    \item \textbf{Word (words)}: Tabuľka spravuje slovnú zásobu, vrátane slov v rôznych jazykoch a ich priradenie ku kategóriám.
+    \item \textbf{UserProgress (user\_progress)}: Táto tabuľka sleduje pokrok používateľov, ako sú naučené slová (\texttt{learned\_words}) a skóre z kvízov (\texttt{quiz\_score}) v konkrétnych kategóriách.
+    \item \textbf{UserKnownWord (user\_known\_words)}: Tabuľka mapuje slová, ktoré používateľ pozná, na základe jeho aktivity v aplikácii.
+    \item \textbf{QuizResult (quiz\_results)}: Obsahuje celkové výsledky kvízov, vrátane skóre (\texttt{score}), dátumu (\texttt{date}), používateľa a jazykovej kategórie.
+    \item \textbf{QuizResultDetail (quiz\_results\_detailed)}: Poskytuje detailnú analýzu výsledkov kvízov, ako sú správne a nesprávne odpovede na jednotlivé slová.
+\end{itemize}
+
+Všetky tabuľky sú navzájom prepojené cez cudzie kľúče, čo umožňuje konzistentné a efektívne spravovanie vzťahov medzi entitami. Napríklad tabuľka \texttt{user\_progress} je prepojená s tabuľkami \texttt{users} a \texttt{categories}, čo umožňuje sledovať pokrok jednotlivých používateľov v rámci rôznych kategórií.
+
+Táto databáza podporuje hlavné funkcie aplikácie, ako je registrácia používateľov, učenie slov, kvízy a sledovanie pokroku.
+
+
+\newpage
+\section{Príprava testov}
+\subsection{Pridanie aplikácie do systémovej cesty}
+Pred testovaním je potrebné pridať nadradený adresár aplikácie do systémovej cesty, aby bolo možné importovať Flask aplikáciu (\texttt{app.py}) a databázové modely:
+\begin{lstlisting}[language=Python]
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+\end{lstlisting}
+
+\subsection*{Fixture: \texttt{test\_client}}
+Fixture \texttt{test\_client} pripravuje testovacie prostredie pre Flask aplikáciu:
+\begin{itemize}
+    \item Aktivuje režim \texttt{TESTING}.
+    \item Nastavuje testovaciu databázu \texttt{test\_db}.
+    \item Vytvára klienta na simuláciu HTTP požiadaviek.
+\end{itemize}
+Kód:
+\begin{lstlisting}[language=Python]
+@pytest.fixture(scope='module')
+def test_client():
+    app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@localhost/test_db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    with app.test_client() as testing_client:
+        with app.app_context():
+            pass
+        yield testing_client
+\end{lstlisting}
+
+\subsection{Popis jednotlivých testov}
+
+\subsubsection{Test: Registrácia používateľa}
+\textbf{Úloha:} Otestovať funkčnosť registrácie nového používateľa.
+
+Kód:
+\begin{lstlisting}[language=Python]
+def test_register_user(test_client):
+    response = test_client.post('/api/register', json={
+        'username': 'testuser',
+        'email': 'testuser@example.com',
+        'password': 'password123'
+    })
+    assert response.status_code == 200
+    assert b"User registered successfully" in response.data
+\end{lstlisting}
+\textbf{Očakávaný výsledok:} HTTP kód 200 a textová odpoveď \texttt{User registered successfully}.
+
+\subsubsection{Test: Prihlásenie používateľa}
+\textbf{Úloha:} Overiť prihlásenie používateľa s platnými a neplatnými prihlasovacími údajmi.
+
+Kód:
+\begin{lstlisting}[language=Python]
+def test_login_user(test_client):
+    invalid_credentials = {
+        "email": "nonexistent@example.com",
+        "password": "wrongpassword"
+    }
+    response = test_client.post('/api/login', json=invalid_credentials)
+    response_json = response.get_json()
+    assert response_json[1] == 401
+    assert response_json[0] == {'error': 'Invalid credentials'}
+
+    valid_credentials = {
+        "email": "testuser@example.com",
+        "password": "password123"
+    }
+    response = test_client.post('/api/login', json=valid_credentials)
+    response_json = response.get_json()
+    assert response_json[1] == 200
+    assert "access_token" in response_json[0]
+\end{lstlisting}
+\textbf{Očakávaný výsledok:}
+\begin{itemize}
+    \item Pri neplatných údajoch: HTTP kód 401 a správa \texttt{Invalid credentials}.
+    \item Pri platných údajoch: HTTP kód 200 a vrátenie \texttt{access\_token}.
+\end{itemize}
+
+\subsubsection{Test: Získanie jazykov}
+\textbf{Úloha:} Otestovať endpoint na získanie zoznamu podporovaných jazykov.
+
+Kód:
+\begin{lstlisting}[language=Python]
+def test_get_languages(test_client):
+    login_response = test_client.post('/api/login', json={
+        'email': 'testuser@example.com',
+        'password': 'password123'
+    })
+    token = login_response.get_json()[0]['access_token']
+    response = test_client.get('/api/languages', headers={
+        'Authorization': f'Bearer {token}'
+    })
+    assert response.status_code == 200
+    assert isinstance(json.loads(response.data), list)
+\end{lstlisting}
+\textbf{Očakávaný výsledok:} HTTP kód 200 a JSON zoznam jazykov.
+
+\subsubsection{Test: Získanie kategórií}
+\textbf{Úloha:} Overiť, či endpoint vracia zoznam kategórií.
+
+Kód:
+\begin{lstlisting}[language=Python]
+def test_get_categories(test_client):
+    login_response = test_client.post('/api/login', json={
+        'email': 'testuser@example.com',
+        'password': 'password123'
+    })
+    token = login_response.get_json()[0]['access_token']
+    response = test_client.get('/api/categories', headers={
+        'Authorization': f'Bearer {token}'
+    })
+    assert response.status_code == 200
+    assert isinstance(json.loads(response.data), list)
+\end{lstlisting}
+\textbf{Očakávaný výsledok:} HTTP kód 200 a JSON zoznam kategórií.
+
+\subsubsection{Test: Prístup k chráneným cestám}
+\textbf{Úloha:} Otestovať prístup k chránenému endpointu s platným tokenom.
+
+Kód:
+\begin{lstlisting}[language=Python]
+def test_protected_route(test_client):
+    login_response = test_client.post('/api/login', json={
+        'email': 'testuser@example.com',
+        'password': 'password123'
+    })
+    token = login_response.get_json()[0]['access_token']
+    response = test_client.get('/api/protected', headers={
+        'Authorization': f'Bearer {token}'
+    })
+    assert response.status_code == 200
+\end{lstlisting}
+\textbf{Očakávaný výsledok:} HTTP kód 200.
+
+\newpage
+\section{Záver}
+Celý projekt predstavuje komplexný systém na výučbu cudzích jazykov, ktorý integruje frontend a backend do jednotného riešenia. Frontend je postavený na technológiách React.js a Vite, ktoré umožňujú moderný, modulárny a vysoko výkonný vývoj. Backend zabezpečuje spoľahlivú správu dát a funkcií, vrátane registrácie, prihlasovania, testovania a uchovávania histórie používateľov.
+
+Hlavné výhody projektu zahŕňajú:
+\begin{itemize}
+    \item \textbf{Používateľská prívetivosť}: Jednoduché a intuitívne rozhranie umožňuje rýchlu orientáciu používateľov a efektívne využitie funkcií aplikácie.
+    \item \textbf{Flexibilita}: React komponenty umožňujú ľahké rozširovanie aplikácie o nové funkcie, pričom Vite poskytuje rýchlu spätnú väzbu pri vývoji.
+    \item \textbf{Výkon}: Vďaka moderným technológiám je aplikácia optimalizovaná na rýchle načítanie a plynulý chod.
+    \item \textbf{Integrácia s backendom}: Proxy server a jasne definované API zjednodušujú komunikáciu medzi frontend a backend časťami, čo zvyšuje spoľahlivosť systému.
+\end{itemize}
+
+Projekt poskytuje robustné riešenie pre výučbu cudzích jazykov, čím podporuje používateľov v rozširovaní svojich jazykových schopností. V budúcnosti je možné aplikáciu ďalej rozvíjať, napríklad pridaním ďalších jazykov, pokročilých testovacích metód alebo využitím umelej inteligencie na personalizáciu obsahu.
+
+Táto aplikácia ukazuje, ako môžu moderné technológie prispieť k zlepšeniu vzdelávania a zároveň demonštruje silu React.js a Vite pri tvorbe komplexných webových aplikácií.
+
+\end{document}
